@@ -38,7 +38,8 @@ function SearchCtrl($scope, $http, $ionicLoading, $location, $stateParams){
 
 
 
-  $scope.search = function(){
+  $scope.search = function(more){
+    
     if ($stateParams.query != $scope.query){
        $scope.page = 0
        $scope.current_search = $scope.query
@@ -46,15 +47,14 @@ function SearchCtrl($scope, $http, $ionicLoading, $location, $stateParams){
       return
     }
 
-
-   
-    
-
-   
-
     $ionicLoading.show({
       template: 'Loading...'
     });
+
+    if(more != 'true'){
+      $scope.page = 0;
+    }
+
 
     $http({
       method: 'GET',
@@ -66,7 +66,7 @@ function SearchCtrl($scope, $http, $ionicLoading, $location, $stateParams){
       $scope.page = data.page
       $scope.more_results = data.more_results;
       $scope.new_results = data.results
-      if(data.page != 0){
+      if(more == 'true'){
         $scope.results = $scope.results.concat($scope.new_results)
         $scope.page = +$scope.page + 1
       }else{
