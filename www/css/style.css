@@ -1,0 +1,10 @@
+/* Empty. Add your own CSS if you like */
+
+
+.cover_search_results{
+	max-height: 200px;
+	height: 100%;
+	width: auto;
+	float: left;
+	margin: 10px;
+}

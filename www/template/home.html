@@ -1,0 +1,41 @@
+        <script id="home.html" type="text/ng-template"> 
+
+         <div ng-controller="SearchCtrl">
+            <div class="list">
+              <div class="item item-input-inset">
+                <label class="item-input-wrapper">
+                  <input type="text" ng-model="query" placeholder="Search" ng-enter="search()">
+                </label>
+                <button class="button ion-search" ng-click="search()">
+                  
+                </button>
+             </div>
+            </div>
+
+
+            <div class="card" ng-repeat="result in results">
+               <div class="item item-avatar">
+                  <img ng-src="{{result.format_icon}}">
+                  <h2>{{result.title}}</h2>
+                  <p>{{result.author}}</p>
+                </div>
+                <div class="item" style="min-height: 150px;">
+
+                  <img class="cover_search_results" ng-src="{{result.image}}">
+                  <h2>Abstract</h2>
+
+                  This is a test to see how this will look. This is a test to see how this will look. This is a test to see how this will look. This is a test to see how this will look. This is a test to see how this will look.
+                  <div ng-hide="!!!result.availability.length">
+                    <h2> Availability </h2>
+                    <div class="item-text-wrap" ng-repeat="scope in result.availability">
+                      {{scope}} <br>
+                    </div>
+                  </div>
+                </div>
+
+               
+                
+                  
+                </div>
+            </div>
+          </script>  
