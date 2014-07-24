@@ -29,7 +29,7 @@ var app = angular.module('egmobile', ['ionic'])
   
  
 
-  $urlRouterProvider.otherwise("/");
+  $urlRouterProvider.otherwise("/search");
 })
 
 
