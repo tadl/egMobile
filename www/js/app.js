@@ -48,7 +48,7 @@ function SearchCtrl($scope, $http, $ionicLoading, $location, $stateParams){
     }
 
     $ionicLoading.show({
-      template: 'Loading...'
+      template: '<i class="icon ion-loading-d big_loading"></i> Loading...'
     });
 
     if(more != 'true'){
@@ -59,7 +59,7 @@ function SearchCtrl($scope, $http, $ionicLoading, $location, $stateParams){
     $http({
       method: 'GET',
       url: 'http://ilscatcher2.herokuapp.com/search/basic',
-      timeout: 10000,
+      timeout: 15000,
       params: {query: $scope.query, page: $scope.page}
     }).success(function(data) {
        // response data
