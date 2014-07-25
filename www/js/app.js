@@ -1,4 +1,4 @@
-// Ionic Starter App
+      // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
@@ -20,6 +20,18 @@ var app = angular.module('egmobile', ['ionic'])
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
+
+  .state('main', {
+    'abstract': true,
+    url: '/home',
+    views:{
+      'account': {templateUrl: 'template/account.html',
+                  controller: 'AccountCtrl'
+                  }
+    }
+  })
+
+
   .state('search', {
     url: '/search?query', 
     //If in a folder, template/welcome.html    
@@ -89,6 +101,51 @@ function SearchCtrl($scope, $http, $ionicLoading, $location, $stateParams){
 
 }
 
+function AccountCtrl($scope, $http, $ionicLoading){
+  $scope.login = function(){
+    
+    if (localStorage['token'] != null){
+      $scope.token = localStorage.getItem('token'),    
+      $scope.login_url = 'http://ilscatcher2.herokuapp.com/account/check_token',
+      $scope.login_params = {token: $scope.token}
+    }else{
+      $scope.login_url = 'http://ilscatcher2.herokuapp.com/account/login',
+      $scope.login_params = {username: $scope.username, password: $scope.password}
+    }
+
+    $http({
+      method: 'GET',
+      url: $scope.login_url,
+      params: $scope.login_params,
+      timeout: 15000, 
+    }).success(function(data) {
+       // response data
+      $scope.full_name = data.full_name
+      $scope.checkouts = data.checkouts
+      $scope.holds = data.holds
+      $scope.holds_ready = data.holds_ready
+      $scope.fine = data.fine
+      localStorage.setItem('token', data.token)
+      $scope.logged_in = true
+    }).error(function(){
+      alert("server taking to long to respond")
+    });
+  }
+
+  if (localStorage['token'] != null){
+      $scope.login();
+  }
+
+
+
+
+}
+
+
+
+
+
+
 //This lets us use ngEnter 
 
 app.directive('ngEnter', function () {
@@ -104,9 +161,3 @@ app.directive('ngEnter', function () {
         });
     };
 });
-
-
-
-
-
-

@@ -1,0 +1,27 @@
+<div id="login-box" class="list" ng-hide="logged_in == true">
+  <label class="item item-input">
+    <span class="input-label">Username</span>
+    <input type="text" ng-model="username">
+  </label>
+  <label class="item item-input">
+    <span class="input-label">Password</span>
+    <input type="password" ng-model="password">
+  </label>
+  <button class="item button button-stable" ng-click="login()">
+    Login
+  </button>
+  <button class="item button button-stable">
+    Reset Password
+  </button>
+</div>
+
+<div id="login-box" class="list" ng-show="logged_in == true">
+{{full_name}}
+{{checkouts}}
+{{holds}}
+{{holds_ready}}
+{{fine}}
+</div>
+
+
+
