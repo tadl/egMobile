@@ -5,7 +5,7 @@
   </label>
   <label class="item item-input">
     <span class="input-label">Password</span>
-    <input type="password" ng-model="password">
+    <input type="password" ng-model="password" ng-enter="login()">
   </label>
   <button class="item button button-stable" ng-click="login()">
     Login
@@ -16,11 +16,26 @@
 </div>
 
 <div id="login-box" class="list" ng-show="logged_in == true">
-{{full_name}}
-{{checkouts}}
-{{holds}}
-{{holds_ready}}
-{{fine}}
+  <div class='list'>
+    <div class="item item-divider">
+    Signed-in as: {{full_name}}
+    </div>
+    <div class="item">
+      Checkouts: {{checkouts}}
+    </div>
+     <div class="item">
+      Holds: {{holds}}
+    </div>
+     <div class="item" ng-hide="holds_ready == 0">
+      Holds Ready: {{holds_ready}}
+    </div>
+     <div class="item" ng-hide="fine == '$0.00'">
+      Fines: {{fine}}
+    </div>
+  </div>
+  <button class="button button-stable" ng-click="logout()">
+  Sign Out
+  </button>
 </div>
 
 

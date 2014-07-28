@@ -23,7 +23,7 @@
       <h2>Abstract</h2>
       This is a test to see how this will look. This is a test to see how this will look. This is a test to see how this will look. This is a test to see how this will look. This is a test to see how this will look.
       <div ng-hide="!!!result.availability.length">
-        <h2> Availability </h2>
+        <h2 ng-click="item_details('{{result.record_id}}')"> Availability </h2>
         <div class="item-text-wrap" ng-repeat="scope in result.availability">
           {{scope}} <br>
         </div>

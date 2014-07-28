@@ -54,10 +54,7 @@ var app = angular.module('egmobile', ['ionic'])
 })
 
 
-function SearchCtrl($scope, $http, $ionicLoading, $location, $stateParams){
-
-
-
+function SearchCtrl($scope, $http, $ionicLoading, $ionicPopup, $location, $stateParams){
 
   $scope.search = function(more){
     if ($stateParams.query != $scope.query){
@@ -74,6 +71,8 @@ function SearchCtrl($scope, $http, $ionicLoading, $location, $stateParams){
     if(more != 'true'){
       $scope.page = 0;
     }
+
+
 
 
     $http({
@@ -99,6 +98,36 @@ function SearchCtrl($scope, $http, $ionicLoading, $location, $stateParams){
       alert("server taking to long to respond")
 
     });
+  };
+
+  $scope.item_details = function(item_id){
+
+  $http({
+    method: 'GET',
+    url: 'http://ilscatcher2.herokuapp.com/items/details',
+    params: {record: item_id},
+    timeout: 15000, 
+    }).success(function(data) {
+      var myPopup = $ionicPopup.show({
+        template: '<input type="password" ng-model="data.wifi">',
+        title: data.item_details.title,
+        subTitle: data.item_details.author,
+        buttons: [
+          { text: 'Cancel' },
+    ]
+  });
+
+
+    }).error(function(){
+      alert("server taking to long to respond")
+    });
+
+
+
+
+    
+
+  
   };
 
   $scope.query = $stateParams.query;
@@ -147,12 +176,14 @@ function AccountCtrl($scope, $http, $ionicLoading){
     });
   }
 
+  $scope.logout = function(){
+    localStorage.clear('token');
+    $scope.logged_in = false
+  }
+
   if (localStorage['token'] != null){
       $scope.login();
   }
-
-
-
 
 }
 
