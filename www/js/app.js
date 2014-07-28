@@ -21,27 +21,36 @@ var app = angular.module('egmobile', ['ionic'])
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
+
+
   .state('main', {
-    'abstract': true,
-    url: '/home',
-    views:{
-      'account': {templateUrl: 'template/account.html',
-                  controller: 'AccountCtrl'
-                  }
-    }
+    url: '/',
+    template: '<div ui-view></div>',
+    views: {
+        'account@': {
+          templateUrl: 'template/account.html',
+          controller: 'AccountCtrl',
+        },
+        'main@':{
+          template: '<div ui-view></div>'
+        }
+      }
+
   })
 
 
-  .state('search', {
-    url: '/search?query', 
-    //If in a folder, template/welcome.html    
-    templateUrl: 'template/search.html',
-    controller: 'SearchCtrl'
+
+  .state('main.search', {
+    url: 'search?query',
+    templateUrl: '/template/search.html',
+    controller: 'SearchCtrl',
+
   })
+  
   
  
 
-  $urlRouterProvider.otherwise("/search");
+  $urlRouterProvider.otherwise("/");
 })
 
 
@@ -51,7 +60,6 @@ function SearchCtrl($scope, $http, $ionicLoading, $location, $stateParams){
 
 
   $scope.search = function(more){
-    
     if ($stateParams.query != $scope.query){
        $scope.page = 0
        $scope.current_search = $scope.query
@@ -120,13 +128,20 @@ function AccountCtrl($scope, $http, $ionicLoading){
       timeout: 15000, 
     }).success(function(data) {
        // response data
-      $scope.full_name = data.full_name
-      $scope.checkouts = data.checkouts
-      $scope.holds = data.holds
-      $scope.holds_ready = data.holds_ready
-      $scope.fine = data.fine
-      localStorage.setItem('token', data.token)
-      $scope.logged_in = true
+      if (data.message == 'failed'){
+        localStorage.clear('token');
+        $scope.logged_in = false
+        return
+      } else {
+        $scope.full_name = data.full_name
+        $scope.checkouts = data.checkouts
+        $scope.holds = data.holds
+        $scope.holds_ready = data.holds_ready
+        $scope.fine = data.fine
+        localStorage.setItem('token', data.token)
+        $scope.logged_in = true
+      }
+    
     }).error(function(){
       alert("server taking to long to respond")
     });
