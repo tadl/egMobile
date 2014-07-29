@@ -3,6 +3,10 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
+
+
+
+
 var app = angular.module('egmobile', ['ionic'])
 
 .run(function($ionicPlatform) {
@@ -46,15 +50,34 @@ var app = angular.module('egmobile', ['ionic'])
     controller: 'SearchCtrl',
 
   })
+
   
   
  
 
-  $urlRouterProvider.otherwise("/");
+ // $urlRouterProvider.otherwise("/");
 })
 
 
-function SearchCtrl($scope, $http, $ionicLoading, $ionicPopup, $location, $stateParams){
+function SearchCtrl($scope, $http, $ionicLoading, $ionicModal, $location, $stateParams){
+  $ionicModal.fromTemplateUrl('/template/item_modal.html', function(modal) 
+    {
+      $scope.modal = modal;
+    }, 
+    {
+      scope: $scope,
+      animation: 'slide-in-up'
+    }
+  );
+
+  $scope.openModal = function() {
+    $scope.modal.show();
+  };
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+  };  
+
+
 
   $scope.search = function(more){
     if ($stateParams.query != $scope.query){
@@ -71,9 +94,6 @@ function SearchCtrl($scope, $http, $ionicLoading, $ionicPopup, $location, $state
     if(more != 'true'){
       $scope.page = 0;
     }
-
-
-
 
     $http({
       method: 'GET',
@@ -101,33 +121,23 @@ function SearchCtrl($scope, $http, $ionicLoading, $ionicPopup, $location, $state
   };
 
   $scope.item_details = function(item_id){
-
-  $http({
-    method: 'GET',
-    url: 'http://ilscatcher2.herokuapp.com/items/details',
-    params: {record: item_id},
-    timeout: 15000, 
-    }).success(function(data) {
-      var myPopup = $ionicPopup.show({
-        template: '<input type="password" ng-model="data.wifi">',
-        title: data.item_details.title,
-        subTitle: data.item_details.author,
-        buttons: [
-          { text: 'Cancel' },
-    ]
-  });
-
-
-    }).error(function(){
-      alert("server taking to long to respond")
+    $ionicLoading.show({
+      template: '<i class="icon ion-loading-d big_loading"></i> Loading...'
     });
 
-
-
-
-    
-
-  
+    $http({
+      method: 'GET',
+      url: 'http://ilscatcher2.herokuapp.com/items/details',
+      params: {record: item_id},
+      timeout: 15000, 
+    }).success(function(data) {
+      $ionicLoading.hide();
+      $scope.openModal();
+      $scope.details = data.item_details
+    }).error(function(){
+      $ionicLoading.hide();
+      alert("server taking to long to respond")
+    });
   };
 
   $scope.query = $stateParams.query;
@@ -135,6 +145,7 @@ function SearchCtrl($scope, $http, $ionicLoading, $ionicPopup, $location, $state
   if($scope.query != null || $scope.current_search != $scope.query ){
     $scope.search();
   }
+
 
 }
 
@@ -184,6 +195,8 @@ function AccountCtrl($scope, $http, $ionicLoading){
   if (localStorage['token'] != null){
       $scope.login();
   }
+
+
 
 }
 

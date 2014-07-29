@@ -13,3 +13,16 @@
   font-size: 30px;
   vertical-align: center;
 }
+
+.cover_item_details{
+	max-height: 300px;
+	height: 100%;
+	width: auto;
+	float: left;
+	margin: 10px;
+}
+
+.detail_key{
+	font-weight: bold;
+	
+}

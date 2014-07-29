@@ -1,9 +1,15 @@
-
-  <ion-modal-view>
-    <ion-header-bar>
-      <h1 class="title">My Modal title</h1>
-    </ion-header-bar>
-    <ion-content>
-      Hello!
+<div class="modal">
+    <ion-header-bar class="bar-solid">
+       	<h1 class="title">{{details.title}}</h1>
+         <div class="button button-clear" ng-click="closeModal()">
+         	<span class="icon ion-close"></span>
+         </div>
+   	</ion-header-bar>
+    <ion-content padding="true">
+         <div class="item"> 
+          <img ng-src="{{details.image}}" class="cover_item_details">
+          <span class="detail_key">Author(s) / Group: </span>
+          <span class="detail_value item-text-wrap">{{details.author}}</span>
+         </div>
     </ion-content>
-  </ion-modal-view>
+</div>
