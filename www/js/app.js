@@ -22,6 +22,11 @@ var app = angular.module('egmobile', ['ionic'])
   });
 })
 
+.run(function($rootScope) {
+    $rootScope.logged_in = ""
+    $rootScope.user_basic = "baseball"
+})
+
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
@@ -55,8 +60,11 @@ var app = angular.module('egmobile', ['ionic'])
   
  
 
- // $urlRouterProvider.otherwise("/");
+ $urlRouterProvider.otherwise("/search");
 })
+
+
+
 
 
 function SearchCtrl($scope, $http, $ionicLoading, $ionicModal, $location, $stateParams){
@@ -75,7 +83,9 @@ function SearchCtrl($scope, $http, $ionicLoading, $ionicModal, $location, $state
   };
   $scope.closeModal = function() {
     $scope.modal.hide();
-  };  
+  };
+
+ 
 
 
 
@@ -134,6 +144,7 @@ function SearchCtrl($scope, $http, $ionicLoading, $ionicModal, $location, $state
       $ionicLoading.hide();
       $scope.openModal();
       $scope.details = data.item_details
+      $scope.copies = data.copies
     }).error(function(){
       $ionicLoading.hide();
       alert("server taking to long to respond")
@@ -145,67 +156,61 @@ function SearchCtrl($scope, $http, $ionicLoading, $ionicModal, $location, $state
   if($scope.query != null || $scope.current_search != $scope.query ){
     $scope.search();
   }
-
-
 }
 
-function AccountCtrl($scope, $http, $ionicLoading){
+function AccountCtrl($scope, $rootScope, $http, $ionicLoading, login){
+ 
   $scope.login = function(){
-    
-    if (localStorage['token'] != null){
-      $scope.token = localStorage.getItem('token'),    
-      $scope.login_url = 'http://ilscatcher2.herokuapp.com/account/check_token',
-      $scope.login_params = {token: $scope.token}
-    }else{
-      $scope.login_url = 'http://ilscatcher2.herokuapp.com/account/login',
-      $scope.login_params = {username: $scope.username, password: $scope.password}
-    }
-
-    $http({
-      method: 'GET',
-      url: $scope.login_url,
-      params: $scope.login_params,
-      timeout: 15000, 
-    }).success(function(data) {
-       // response data
-      if (data.message == 'failed'){
-        localStorage.clear('token');
-        $scope.logged_in = false
-        return
-      } else {
-        $scope.full_name = data.full_name
-        $scope.checkouts = data.checkouts
-        $scope.holds = data.holds
-        $scope.holds_ready = data.holds_ready
-        $scope.fine = data.fine
-        localStorage.setItem('token', data.token)
-        $scope.logged_in = true
-      }
-    
-    }).error(function(){
-      alert("server taking to long to respond")
-    });
+    login.login($scope.username, $scope.password)    
   }
 
   $scope.logout = function(){
-    localStorage.clear('token');
-    $scope.logged_in = false
+    localStorage.removeItem('token');
+    $rootScope.logged_in = false
   }
 
   if (localStorage['token'] != null){
-      $scope.login();
+    login.login();
   }
-
-
-
 }
 
+app.factory('login', function($http, $rootScope){
+  return {
+    login: function(username, password){
+      var username = username
+      var password = password
+      if (localStorage['token'] != null){
+        var token = localStorage.getItem('token'),    
+        login_url = 'http://ilscatcher2.herokuapp.com/account/check_token',
+        login_params = {"token": token}
+    }else{
+      login_url = 'http://ilscatcher2.herokuapp.com/account/login',
+      login_params = {"username": username, "password": password}
+    }
+    $http({
+      method: 'GET',
+      url: login_url,
+      params: login_params,
+      timeout: 15000, 
+    }).success(function(data) {
+       // response data
+      if (data.message == 'login failed' || data.message == 'failed' ){
+        localStorage.removeItem('token');
+        $rootScope.logged_in = false
+        $rootScope.user_basic = {}
+      } else {
+        localStorage.setItem('token', data.token)
+        $rootScope.user_basic = data
+        $rootScope.logged_in = true
+      }   
+    }).error(function(){
+      alert("server taking to long to respond")
+    });
 
+    }
+  }
 
-
-
-
-//This lets us use ngEnter 
+});
 
 app.directive('ngEnter', function () {
     return function (scope, element, attrs) {

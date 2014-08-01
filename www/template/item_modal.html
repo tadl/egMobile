@@ -1,15 +1,32 @@
 <div class="modal">
     <ion-header-bar class="bar-solid">
-       	<h1 class="title">{{details.title}}</h1>
+       	<h1 class="title">Item Details</h1>
          <div class="button button-clear" ng-click="closeModal()">
          	<span class="icon ion-close"></span>
          </div>
    	</ion-header-bar>
     <ion-content padding="true">
-         <div class="item"> 
-          <img ng-src="{{details.image}}" class="cover_item_details">
-          <span class="detail_key">Author(s) / Group: </span>
-          <span class="detail_value item-text-wrap">{{details.author}}</span>
-         </div>
+        <div class="item"> 
+         	<span class="detail_title">{{details.title}}</span>
+         	<br>	
+          	<img ng-src="{{details.image}}" class="cover_item_details">
+          	<span class="detail_key">Author(s) / Group: </span>
+          	<span class="detail_value item-text-wrap">{{details.author}}</span>
+          	<br>
+          	<div ng-show="details.summary != null">
+          		<span class="detail_key">Summary: </span>
+          		<span class="detail_value item-text-wrap">{{details.summary}}</span>
+          	</div>
+          	<div ng-show="details.contents != null">
+          		<span class="detail_key">Contents: </span>
+          		<span class="detail_value item-text-wrap">{{details.contents}}</span>
+          	</div>		
+        </div>
+        <div class="item"> 
+        	<span class="detail_title">Copies</span>
+        	<div ng-repeat="copy in copies">
+        		<span class="detail_value item-text-wrap">{{copy.location}}</span>
+        	</div>
+        </div>
     </ion-content>
 </div>

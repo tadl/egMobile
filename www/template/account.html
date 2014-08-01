@@ -1,4 +1,4 @@
-<div id="login-box" class="list" ng-hide="logged_in == true">
+<div id="login-box" class="list" ng-hide="$root.logged_in == true">
   <label class="item item-input">
     <span class="input-label">Username</span>
     <input type="text" ng-model="username">
@@ -15,22 +15,22 @@
   </button>
 </div>
 
-<div id="login-box" class="list" ng-show="logged_in == true">
+<div id="login-box" class="list" ng-show="$root.logged_in == true">
   <div class='list'>
     <div class="item item-divider">
-    Signed-in as: {{full_name}}
+    Signed-in as: {{$root.user_basic.full_name}}
     </div>
     <div class="item">
-      Checkouts: {{checkouts}}
+      Checkouts: {{$root.user_basic.checkouts}}
     </div>
      <div class="item">
-      Holds: {{holds}}
+      Holds: {{$root.user_basic.holds}}
     </div>
      <div class="item" ng-hide="holds_ready == 0">
-      Holds Ready: {{holds_ready}}
+      Holds Ready: {{$root.user_basic.holds_ready}}
     </div>
      <div class="item" ng-hide="fine == '$0.00'">
-      Fines: {{fine}}
+      Fines: {{$root.user_basic.fine}}
     </div>
   </div>
   <button class="button button-stable" ng-click="logout()">
