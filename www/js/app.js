@@ -1,12 +1,3 @@
-      // Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-
-
-
-
 var app = angular.module('egmobile', ['ionic'])
 
 .run(function($ionicPlatform) {
@@ -22,15 +13,15 @@ var app = angular.module('egmobile', ['ionic'])
   });
 })
 
+//Set gloabl variables
 .run(function($rootScope) {
     $rootScope.logged_in = ""
     $rootScope.user_basic = "baseball"
 })
 
+//Create routes
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
-
-
 
   .state('main', {
     url: '/',
@@ -47,8 +38,6 @@ var app = angular.module('egmobile', ['ionic'])
 
   })
 
-
-
   .state('main.search', {
     url: 'search?query',
     templateUrl: '/template/search.html',
@@ -56,18 +45,11 @@ var app = angular.module('egmobile', ['ionic'])
 
   })
 
-  
-  
- 
-
- $urlRouterProvider.otherwise("/search");
+  $urlRouterProvider.otherwise("/search");
 })
 
-
-
-
-
-function SearchCtrl($scope, $http, $ionicLoading, $ionicModal, $location, $stateParams){
+//Search Controller
+function SearchCtrl($scope, $http, $ionicLoading, $ionicModal, $location, $stateParams, hold){
   $ionicModal.fromTemplateUrl('/template/item_modal.html', function(modal) 
     {
       $scope.modal = modal;
@@ -84,10 +66,6 @@ function SearchCtrl($scope, $http, $ionicLoading, $ionicModal, $location, $state
   $scope.closeModal = function() {
     $scope.modal.hide();
   };
-
- 
-
-
 
   $scope.search = function(more){
     if ($stateParams.query != $scope.query){
@@ -151,6 +129,10 @@ function SearchCtrl($scope, $http, $ionicLoading, $ionicModal, $location, $state
     });
   };
 
+  $scope.place_hold = function(record_id){
+    hold.place(record_id);
+  }
+
   $scope.query = $stateParams.query;
 
   if($scope.query != null || $scope.current_search != $scope.query ){
@@ -158,6 +140,7 @@ function SearchCtrl($scope, $http, $ionicLoading, $ionicModal, $location, $state
   }
 }
 
+//Account Controller
 function AccountCtrl($scope, $rootScope, $http, $ionicLoading, login){
  
   $scope.login = function(){
@@ -174,6 +157,7 @@ function AccountCtrl($scope, $rootScope, $http, $ionicLoading, login){
   }
 }
 
+//Login Factory
 app.factory('login', function($http, $rootScope){
   return {
     login: function(username, password){
@@ -212,6 +196,37 @@ app.factory('login', function($http, $rootScope){
 
 });
 
+app.factory('hold', function($http, $rootScope, login){
+  return {
+    place: function(record_ids){
+      var record_ids = record_ids
+      if ($rootScope.logged_in == false){
+        alert("login to place hold")
+      }else{
+        var token = localStorage.getItem('token')
+        $http({
+        method: 'GET',
+        url: 'http://ilscatcher2.herokuapp.com/account/place_holds',
+        params: {"record_ids": record_ids, "token": token},
+        timeout: 15000, 
+    }).success(function(data) {
+      if (data.message != 'Invalid token'){
+        alert(data.confirmation_messages[0].message)
+        login.login();
+      }else{
+        alert("bad token")
+      }
+    }).error(function(){
+      $ionicLoading.hide();
+      alert("server taking to long to respond")
+    });
+        
+      }
+    }
+  }
+});
+
+//NgEnter Directive
 app.directive('ngEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
