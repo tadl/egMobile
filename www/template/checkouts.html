@@ -1,0 +1,26 @@
+<div class="list">
+ 	<h1 class="item item-divider">Items Checked Out</h1>
+ </div>	
+<div class="card" ng-repeat="checkout in checkouts">
+	<div class="item item-avatar">
+      <img ng-src="https://catalog.tadl.org/opac/extras/ac/jacket/small/r/{{checkout.record_id}}">
+      <h2>{{checkout.title}}</h2>
+      <p>{{checkout.author}}</p>
+    </div>
+    <div class="item">
+    	<span class="detail_key">Due Date: </span>
+    	<span class="detail_value">{{checkout.due_date}} </span>
+    	<br>
+    	<span class="detail_key">Renew Attempts Remaing: </span>
+    	<span class="detail_value">{{checkout.renew_attempts}} </span>
+    	<br>
+    </div>
+    <div class="item">      
+    	<button class="button button-positive" ng-click="item_details('{{checkout.record_id}}')">
+        	Details
+      	</button>
+      	<button class="button button-balanced" ng-click="renew('{{checkout.checkout_id}}')">
+        	Renew
+      	</button>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="list">
+ 	<h1 class="item item-divider">Items on Hold</h1>
+ </div>	
+<div class="card" ng-repeat="hold in holds">
+	<div class="item item-avatar">
+      <img ng-src="https://catalog.tadl.org/opac/extras/ac/jacket/small/r/{{hold.record_id}}">
+      <h2>{{hold.title}}</h2>
+      <p>{{hold.author}}</p>
+    </div>
+    <div class="item">
+    	<span class="detail_key">Status: </span>
+    	<span class="detail_value">{{hold.queue_status}} </span><br>
+    </div>
+    <div class="item">      
+    	<button class="button button-positive" ng-click="item_details('{{hold.record_id}}')">
+        	Details
+      	</button>
+      	   	<button class="button button-dark" ng-click="item_details('{{hold.record_id}}')">
+        	Suspend
+      	</button>
+      	<button class="button button-assertive" ng-click="item_details('{{hold.record_id}}')">
+        	Cancel
+      	</button>
+   
+    </div>
+</div>
