@@ -48,6 +48,9 @@ var app = angular.module('egmobile', ['ionic'])
       },
       'main@':{
         template: '<div ui-view></div>'
+      },
+      'menu@':{
+        templateUrl: 'template/menu.html'
       }
     }
   })

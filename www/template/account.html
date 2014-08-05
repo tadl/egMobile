@@ -20,17 +20,21 @@
     <div class="item item-divider">
     Signed-in as: {{$root.user_basic.full_name}}
     </div>
-    <div class="item" ui-sref="main.checkouts">
-      Checkouts: {{$root.user_basic.checkouts}}
-    </div>
-     <div class="item" ui-sref="main.holds">
-      Holds: {{$root.user_basic.holds}}
-    </div>
+    <a ui-sref="main.checkouts" class="account_link">
+      <div class="item account_div">
+        Checkouts: <span class="badge badge-positive">{{$root.user_basic.checkouts}}</span>
+      </div>
+    </a>
+    <a ui-sref="main.holds" class="account_link">
+      <div class="item account_div">
+        Holds: <span class="badge badge-positive">{{$root.user_basic.holds}}</span>
+      </div>
+    </a>
      <div class="item" ng-hide="$root.user_basic.holds_ready == 0">
       Holds Ready: {{$root.user_basic.holds_ready}}
     </div>
      <div class="item" ng-hide="$root.user_basic.fine == '$0.00'">
-      Fines: {{$root.user_basic.fine}}
+      Fines: <span class="badge badge-positive">{{$root.user_basic.fine}}</span>
     </div>
   </div>
   <button class="button button-stable" ng-click="logout()">
