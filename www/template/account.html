@@ -20,15 +20,11 @@
     <div class="item item-divider">
     Signed-in as: {{$root.user_basic.full_name}}
     </div>
-    <a ui-sref="main.checkouts" class="account_link">
-      <div class="item account_div">
+    <a ui-sref="main.checkouts" class="item" menu-close>
         Checkouts: <span class="badge badge-positive">{{$root.user_basic.checkouts}}</span>
-      </div>
     </a>
-    <a ui-sref="main.holds" class="account_link">
-      <div class="item account_div">
+    <a ui-sref="main.holds" class="item" menu-close>
         Holds: <span class="badge badge-positive">{{$root.user_basic.holds}}</span>
-      </div>
     </a>
      <div class="item" ng-hide="$root.user_basic.holds_ready == 0">
       Holds Ready: {{$root.user_basic.holds_ready}}

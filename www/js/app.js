@@ -18,11 +18,6 @@ var app = angular.module('egmobile', ['ionic'])
   $rootScope.logged_in = ""
   $rootScope.user_basic = ""
 
-  $rootScope.close_menus = function(){
-    $ionicSideMenuDelegate.toggleLeft(false);
-    $ionicSideMenuDelegate.toggleRight(false);
-  }
-
   $rootScope.show_loading = function(){
     $ionicLoading.show({
       template: '<i class="icon ion-loading-d big_loading"></i> Loading...'
@@ -71,6 +66,12 @@ var app = angular.module('egmobile', ['ionic'])
     url: 'checkouts',
     templateUrl: '/template/checkouts.html',
     controller: 'CheckoutCtrl',
+  })
+
+  .state('main.locations',{
+    url: 'locations',
+    templateUrl: '/template/locations.html',
+    controller: 'LocationCtrl',
   })
 
   $urlRouterProvider.otherwise("/search");
@@ -126,8 +127,7 @@ function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, it
     hold.place(record_id);
   }
 
-  $scope.query = $stateParams.query;
-
+  $scope.query = $stateParams.query;  
   if($scope.query != null || $scope.current_search != $scope.query ){
     $scope.search();
   }
@@ -171,7 +171,7 @@ function HoldsCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details){
 
   
   $scope.cancel_hold = function(hold_id){
-    alert('you are canceling hold ' hold_id)
+    alert('you are canceling hold ' + hold_id)
   }
 
 
@@ -179,8 +179,7 @@ function HoldsCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details){
   $scope.item_details = function(record_id){
     item_details.show(record_id);
   };
-  
-  $rootScope.close_menus();    
+    
   $scope.holds();
 }
 
@@ -228,11 +227,29 @@ function CheckoutCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details
     })  
   };
 
-  $rootScope.close_menus();  
   $scope.checkouts();
 }
 
+//Location Controller
 
+function LocationCtrl($scope, $rootScope, $http, $ionicLoading){
+  $scope.get_locations = function(){
+    $rootScope.show_loading();
+    $http({
+      method: 'GET',
+      url: 'http://ilscatcher2.herokuapp.com/web/locations',
+      timeout: 15000, 
+    }).success(function(data) {
+      $scope.locations = data.locations
+      $rootScope.hide_loading();
+    }).error(function(){
+      alert("server taking to long to respond")
+      $rootScope.hide_loading();
+    });
+  };
+
+  $scope.get_locations();
+}
 
 //Login Factory
 app.factory('login', function($http, $rootScope){
