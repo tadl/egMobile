@@ -169,9 +169,16 @@ function HoldsCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details){
     });
   };
 
-    $scope.item_details = function(record_id){
-      item_details.show(record_id);
-    };
+  
+  $scope.cancel_hold = function(hold_id){
+    alert('you are canceling hold ' hold_id)
+  }
+
+
+
+  $scope.item_details = function(record_id){
+    item_details.show(record_id);
+  };
   
   $rootScope.close_menus();    
   $scope.holds();
@@ -204,18 +211,19 @@ function CheckoutCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details
     var token = localStorage.getItem('token')
     $http({
       method: 'GET',
-      url: 'http://ilscatcher2.herokuapp.com/account/checkouts',
-      params: {"token": token, "checkout_id": checkout_id},
+      url: 'http://ilscatcher2.herokuapp.com/account/renew_items',
+      params: {"token": token, "circ_ids": checkout_id},
       timeout: 15000,
     }).success(function(data){
       if (data.message != 'Invalid token'){
-        alert(data.confirmation_messages[0].message)
-        var hold_button = document.getElementById('hold_' + record_ids)
-        hold_button.innerHTML = "held!";
-        hold_button.disabled = true;
-        login.login();
+        if (data.confirmation != null){
+          alert(data.confirmation);
+        }else{
+          alert(data.errors[0].message);
+        }
+        $scope.checkouts = data.checkouts
       }else{
-        alert("bad token")
+        alert("Your login has expired")
       }
     })  
   };
