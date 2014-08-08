@@ -14,7 +14,7 @@ var app = angular.module('egmobile', ['ionic'])
 })
 
 //Set gloabl variables and functions
-.run(function($rootScope, $ionicSideMenuDelegate, $ionicLoading) {
+.run(function($rootScope, $ionicSideMenuDelegate, $ionicLoading, $ionicScrollDelegate) {
   $rootScope.logged_in = ""
   $rootScope.user_basic = ""
 
@@ -27,6 +27,11 @@ var app = angular.module('egmobile', ['ionic'])
   $rootScope.hide_loading = function(){
     $ionicLoading.hide();
   }
+
+  $rootScope.$on('$viewContentLoaded', function(){ 
+    $ionicScrollDelegate.scrollTop();
+  });
+
 })
 
 //Create routes
@@ -35,14 +40,13 @@ var app = angular.module('egmobile', ['ionic'])
 
   .state('main', {
     url: '/',
-    template: '<div ui-view></div>',
     views: {
       'account@': {
         templateUrl: 'template/account.html',
         controller: 'AccountCtrl',
       },
       'main@':{
-        template: '<div ui-view></div>'
+        template: '<ui-view/>'
       },
       'menu@':{
         templateUrl: 'template/menu.html'
@@ -74,7 +78,20 @@ var app = angular.module('egmobile', ['ionic'])
     controller: 'LocationCtrl',
   })
 
+  .state('main.events',{
+    url: 'events',
+    templateUrl: '/template/events.html',
+    controller: 'EventsCtrl',
+  })
+
+  .state('main.news',{
+    url: 'news',
+    templateUrl: '/template/news.html',
+    controller: 'NewsCtrl',
+  })
+
   $urlRouterProvider.otherwise("/search");
+
 })
 
 //Search Controller
@@ -250,6 +267,51 @@ function LocationCtrl($scope, $rootScope, $http, $ionicLoading){
 
   $scope.get_locations();
 }
+
+
+//Events Controller
+
+function EventsCtrl($scope, $rootScope, $http, $ionicLoading){
+  $scope.get_events = function(){
+    $rootScope.show_loading();
+    $http({
+      method: 'GET',
+      url: 'http://ilscatcher2.herokuapp.com/web/events',
+      timeout: 15000, 
+    }).success(function(data) {
+      $scope.events = data.events
+      $rootScope.hide_loading();
+    }).error(function(){
+      alert("server taking to long to respond")
+      $rootScope.hide_loading();
+    });
+  };
+
+  $scope.get_events();
+}
+
+//Events Controller
+
+function NewsCtrl($scope, $rootScope, $http, $ionicLoading){
+  $scope.get_news = function(){
+    $rootScope.show_loading();
+    $http({
+      method: 'GET',
+      url: 'http://ilscatcher2.herokuapp.com/web/news',
+      timeout: 15000, 
+    }).success(function(data) {
+      $scope.news = data.news
+      $rootScope.hide_loading();
+    }).error(function(){
+      alert("server taking to long to respond")
+      $rootScope.hide_loading();
+    });
+  };
+
+  $scope.get_news();
+}
+
+
 
 //Login Factory
 app.factory('login', function($http, $rootScope){

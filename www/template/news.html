@@ -1,0 +1,10 @@
+<div class="list">
+ 	<h1 class="item item-divider">Featured News</h1>
+ </div>	
+<div class="card" ng-repeat="new in news">
+	<div class="item">
+    <h2>{{new.title}}</h2>
+    <img ng-src="{{new.image}}" class="news_image" ng-if="new.image"><br>
+    <span>{{new.teasertitle}}</span><br>
+  </div>
+</div>
