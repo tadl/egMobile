@@ -187,8 +187,22 @@ function HoldsCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details){
   };
 
   
-  $scope.cancel_hold = function(hold_id){
-    alert('you are canceling hold ' + hold_id)
+  $scope.change_hold = function(hold_id, task){
+    var token = localStorage.getItem('token')
+    $rootScope.show_loading();
+    $http({
+      method: 'GET',
+      url: 'http://ilscatcher2.herokuapp.com/account/holds',
+      params: {"token": token, "task": task, "hold_id": hold_id},
+      timeout: 15000, 
+    }).success(function(data) {
+      $scope.holds = data.holds
+      $rootScope.user_basic['holds'] = data.count
+      $rootScope.hide_loading();
+    }).error(function(){
+      alert("server taking to long to respond")
+      $rootScope.hide_loading();
+    });
   }
 
 
