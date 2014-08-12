@@ -12,8 +12,11 @@
 
     </div>
   </div>
-         
-  <div class="card" ng-repeat="result in results">
+
+
+
+
+    <div class="card" ng-repeat="result in results">
     <div class="item item-avatar">
       <img ng-src="{{result.format_icon}}">
       <h2>{{result.title}}</h2>
@@ -39,10 +42,11 @@
       </button>
     </div>
   </div>
-  <div class="card" ng-show="more_results == 'true'">
-    <button class="button button-block button-positive" ng-click="search('true')">
-      Load More
-    </button>
-  </div>
+
+      <ion-infinite-scroll ng-if="more_results == 'true'" on-infinite="search('true')" distance="20%"></ion-infinite-scroll>
+      
+
+
+
 
 

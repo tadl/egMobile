@@ -105,10 +105,11 @@ function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, it
       return
     }
 
-    $rootScope.show_loading();
+    
 
     if(more != 'true'){
       $scope.page = 0;
+      $rootScope.show_loading();
     }
 
     $http({
@@ -124,11 +125,13 @@ function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, it
       if(more == 'true'){
         $scope.results = $scope.results.concat($scope.new_results)
         $scope.page = +$scope.page + 1
+
       }else{
         $scope.results = data.results;
         $scope.page = +$scope.page + 1
       }
       $rootScope.hide_loading();
+      $scope.$broadcast('scroll.infiniteScrollComplete');
     }).error(function(){
       $rootScope.hide_loading();
       alert("server taking to long to respond")
@@ -139,6 +142,11 @@ function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, it
   $scope.item_details = function(record_id){
     item_details.show(record_id);
   };
+
+  $scope.testy = function(){
+    alert('Hello')
+
+  }
 
   $scope.place_hold = function(record_id){
     hold.place(record_id);
@@ -151,7 +159,7 @@ function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, it
 }
 
 //Account Controller
-function AccountCtrl($scope, $rootScope, $http, $ionicLoading, login){
+function AccountCtrl($scope, $rootScope, $http, $location, $ionicLoading, login){
  
   $scope.login = function(){
     login.login($scope.username, $scope.password)    
@@ -160,6 +168,7 @@ function AccountCtrl($scope, $rootScope, $http, $ionicLoading, login){
   $scope.logout = function(){
     localStorage.removeItem('token');
     $rootScope.logged_in = false
+    $location.path( "/home" );
   }
 
   if (localStorage['token'] != null){
@@ -304,7 +313,7 @@ function EventsCtrl($scope, $rootScope, $http, $ionicLoading){
   $scope.get_events();
 }
 
-//Events Controller
+//News Controller
 
 function NewsCtrl($scope, $rootScope, $http, $ionicLoading){
   $scope.get_news = function(){
