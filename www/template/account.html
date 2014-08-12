@@ -26,6 +26,9 @@
     <a ui-sref="main.holds" class="item" menu-close>
         Holds: <span class="badge badge-positive">{{$root.user_basic.holds}}</span>
     </a>
+    <a ui-sref="main.card" class="item item-icon-left" menu-close>
+        <i class="icon ion-card"></i> Library Card 
+    </a>
      <div class="item" ng-hide="$root.user_basic.fine == '$0.00'">
       Fines: <span class="badge badge-positive">{{$root.user_basic.fine}}</span>
     </div>

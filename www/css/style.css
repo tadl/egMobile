@@ -43,3 +43,10 @@ a.menu_link{
 div.menu_div:hover {
     background-color: #f5f5f5;
 }
+
+.barcode_img{
+	width: 80%;
+	max-width: 450px;
+	display: block;
+	margin: 0 auto;
+}

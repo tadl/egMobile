@@ -28,6 +28,10 @@ var app = angular.module('egmobile', ['ionic'])
     $ionicLoading.hide();
   }
 
+  $rootScope.show_account = function(){
+    $ionicSideMenuDelegate.toggleRight(true);
+  }
+
   $rootScope.$on('$viewContentLoaded', function(){ 
     $ionicScrollDelegate.scrollTop();
   });
@@ -70,6 +74,12 @@ var app = angular.module('egmobile', ['ionic'])
     url: 'checkouts',
     templateUrl: '/template/checkouts.html',
     controller: 'CheckoutCtrl',
+  })
+
+  .state('main.card',{
+    url: 'card',
+    templateUrl: '/template/card.html',
+    controller: 'CardCtrl',
   })
 
   .state('main.locations',{
@@ -166,8 +176,9 @@ function AccountCtrl($scope, $rootScope, $http, $location, $ionicLoading, login)
   }
 
   $scope.logout = function(){
-    localStorage.removeItem('token');
+    localStorage.clear();
     $rootScope.logged_in = false
+    $rootScope.user_basic = {}
     $location.path( "/home" );
   }
 
@@ -270,6 +281,27 @@ function CheckoutCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details
   $scope.checkouts();
 }
 
+//Card Controller
+
+function CardCtrl($scope, $rootScope, $ionicLoading, $location, login){
+  $scope.show_card = function(){
+    if(localStorage.getItem('card')){
+      var card = localStorage.getItem('card')
+      $("#barcode").JsBarcode(card,{format:"CODE128",displayValue:true,fontSize:15, width: 2}); 
+    }else{
+      if($rootScope.logged_in == true){
+        setTimeout(function() { $scope.show_card()}, 1500);
+      }else{
+        $location.path( "/home" );
+        $rootScope.show_account();
+      }  
+    }
+  }
+  $scope.show_card()
+}
+
+
+
 //Location Controller
 
 function LocationCtrl($scope, $rootScope, $http, $ionicLoading){
@@ -366,6 +398,7 @@ app.factory('login', function($http, $rootScope){
         $rootScope.user_basic = {}
       } else {
         localStorage.setItem('token', data.token)
+        localStorage.setItem('card', data.card)
         $rootScope.user_basic = data
         $rootScope.logged_in = true
       }   
@@ -408,10 +441,10 @@ app.factory('item_details', function($http, $ionicModal, $rootScope){
         params: {"record": record_id},
         timeout: 15000, 
       }).success(function(data){
-           $scope.openModal();
-            $scope.details = data.item_details
-            $scope.copies = data.copies
-            $rootScope.hide_loading();
+          $scope.openModal();
+          $scope.details = data.item_details
+          $scope.copies = data.copies
+          $rootScope.hide_loading();
       })
     }  
   }
@@ -420,10 +453,12 @@ app.factory('item_details', function($http, $ionicModal, $rootScope){
 app.factory('hold', function($http, $rootScope, login){
   return {
     place: function(record_ids){
+      
       var record_ids = record_ids
       if ($rootScope.logged_in == false){
         alert("login to place hold")
       }else{
+        $rootScope.show_loading();
         var token = localStorage.getItem('token')
         $http({
         method: 'GET',
@@ -431,20 +466,26 @@ app.factory('hold', function($http, $rootScope, login){
         params: {"record_ids": record_ids, "token": token},
         timeout: 15000, 
     }).success(function(data) {
+      $rootScope.hide_loading(); 
       if (data.message != 'Invalid token'){
         alert(data.confirmation_messages[0].message)
-        var hold_button = document.getElementById('hold_' + record_ids)
-        hold_button.innerHTML = "held!";
-        hold_button.disabled = true;
-        login.login();
+        if(data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ){
+          var hold_button = document.getElementById('hold_' + record_ids)
+          hold_button.innerHTML = "On Hold";
+          hold_button.disabled = true;
+          login.login();
+        }  
       }else{
         alert("bad token")
+        login.login();
       }
     }).error(function(){
+      $rootScope.hide_loading(); 
       alert("server taking to long to respond")
     });
         
       }
+       
     }
   }
 });
