@@ -17,7 +17,6 @@ var app = angular.module('egmobile', ['ionic'])
 .run(function($rootScope, $ionicSideMenuDelegate, $ionicLoading, $ionicScrollDelegate) {
   $rootScope.logged_in = ""
   $rootScope.user_basic = ""
-
   $rootScope.show_loading = function(){
     $ionicLoading.show({
       template: '<i class="icon ion-loading-d big_loading"></i> Loading...'
@@ -106,7 +105,7 @@ var app = angular.module('egmobile', ['ionic'])
 
 //Search Controller
 function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, item_details){
-
+  $scope.advance_search = false
   $scope.search = function(more){
     if ($stateParams.query != $scope.query){
        $scope.page = 0
@@ -153,9 +152,12 @@ function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, it
     item_details.show(record_id);
   };
 
-  $scope.testy = function(){
-    alert('Hello')
-
+  $scope.toggle_advanced = function(){
+    if($scope.advance_search == false){
+      $scope.advance_search = true
+    }else{
+      $scope.advance_search = false
+    } 
   }
 
   $scope.place_hold = function(record_id){

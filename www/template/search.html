@@ -1,16 +1,72 @@
 
   <div class="list">
     <div class="item item-input-inset">
-   
       <label class="item-input-wrapper">
         <i class="icon ion-search placeholder-icon"></i>
         <input type="text" ng-model="query" placeholder="Search" ng-enter="search()">
       </label>
-
-
-
-
+      <button class="button button-clear icon ion-gear-a" ng-click="toggle_advanced()"></button>
     </div>
+    <div id="search_options" ng-show="advance_search == true">
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Location
+        </div>
+        <select>
+          <option>All</option>
+          <option>Woodmere</option>
+          <option>Kingsley</option>
+          <option>Interlochen</option>
+          <option>Peninsula</option>
+          <option>East Bay</option>
+          <option>Fife Lake</option>
+        </select> 
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Search Type
+        </div>
+        <select>
+          <option>Keyword</option>
+          <option>Title</option>
+          <option>Author / Group</option>
+          <option>Subject</option>
+        </select>
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Media Type
+        </div>
+        <select>
+          <option>All</option>
+          <option>Books</option>
+          <option>Movies</option>
+          <option>Music</option>
+        </select>
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Sort By
+        </div>
+        <select>
+          <option>Relevance</option>
+          <option>Newest to Oldest</option>
+          <option>Oldest to Newest</option>
+          <option>A to Z</option>
+          <option>Z to A</option>
+        </select>
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Only Show Available Items
+        </div>
+        <select>
+          <option>Off</option>
+          <option>On</option>
+        </select>
+      </label>
+    
+
   </div>
 
 
