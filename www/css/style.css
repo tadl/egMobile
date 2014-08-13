@@ -23,7 +23,8 @@
 }
 
 .location_image{
-	max-height: 500px;
+	max-width: 300px;
+	width: 50%;
 }
 
 .detail_key{
@@ -49,4 +50,8 @@ div.menu_div:hover {
 	max-width: 450px;
 	display: block;
 	margin: 0 auto;
+}
+
+.news_image{
+  width: 100%;
 }
