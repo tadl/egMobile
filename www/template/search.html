@@ -80,8 +80,10 @@
     </div>
     <div class="item" style="min-height: 150px;">
       <img class="cover_search_results" ng-src="{{result.image}}">
-      <h2>Abstract</h2>
-      This is a test to see how this will look. This is a test to see how this will look. This is a test to see how this will look. This is a test to see how this will look. This is a test to see how this will look.
+      <h2 ng-show="result.abstract != null">Abstract</h2>
+      <p ng-show="result.abstract != null">{{result.abstract}}</p>
+      <h2 ng-show="result.contents != null">Contents</h2>
+      <p ng-show="result.contents != null">{{result.contents}}</p>
       <div ng-hide="!!!result.availability.length">
         <h2> Availability </h2>
         <div class="item-text-wrap" ng-repeat="scope in result.availability">
