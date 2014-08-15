@@ -31,7 +31,7 @@ var app = angular.module('egmobile', ['ionic'])
     $ionicSideMenuDelegate.toggleRight(true);
   }
 
-  $rootScope.$on('$viewContentLoaded', function(){ 
+  $rootScope.$on('$viewContentLoaded', function(){
     $ionicScrollDelegate.scrollTop();
   });
 
@@ -104,16 +104,14 @@ var app = angular.module('egmobile', ['ionic'])
 })
 
 //Search Controller
-function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, item_details){
+app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, hold, item_details){
   $scope.advance_search = false
   
   $scope.search = function(more){
-
     if(more != 'true'){
       $scope.page = 0;
       $rootScope.show_loading();
     }
-
    
     var search_params = {}
     search_params['query'] = $scope.query
@@ -168,7 +166,7 @@ function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, it
       $scope.advance_search = true
     }else{
       $scope.advance_search = false
-    } 
+    }
   }
 
   $scope.place_hold = function(record_id){
@@ -189,13 +187,13 @@ function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, it
   if($scope.query != null || $scope.current_search != $scope.query ){
     $scope.search();
   }
-}
+});
 
 //Account Controller
-function AccountCtrl($scope, $rootScope, $http, $location, $ionicLoading, login){
- 
+app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $ionicLoading, login){
+
   $scope.login = function(){
-    login.login($scope.username, $scope.password)    
+    login.login($scope.username, $scope.password)
   }
 
   $scope.logout = function(){
@@ -208,10 +206,10 @@ function AccountCtrl($scope, $rootScope, $http, $location, $ionicLoading, login)
   if (localStorage['token'] != null){
     login.login();
   }
-}
+});
 
 //Hold Controller
-function HoldsCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details){
+app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details){
   $scope.holds = function(){
     var token = localStorage.getItem('token')
     $rootScope.show_loading();
@@ -219,7 +217,7 @@ function HoldsCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details){
       method: 'GET',
       url: 'http://ilscatcher2.herokuapp.com/account/holds',
       params: {"token": token},
-      timeout: 15000, 
+      timeout: 15000,
     }).success(function(data) {
       $scope.holds = data.holds
       $rootScope.hide_loading();
@@ -229,7 +227,7 @@ function HoldsCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details){
     });
   };
 
-  
+
   $scope.change_hold = function(hold_id, task){
     var token = localStorage.getItem('token')
     $rootScope.show_loading();
@@ -237,7 +235,7 @@ function HoldsCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details){
       method: 'GET',
       url: 'http://ilscatcher2.herokuapp.com/account/holds',
       params: {"token": token, "task": task, "hold_id": hold_id},
-      timeout: 15000, 
+      timeout: 15000,
     }).success(function(data) {
       $scope.holds = data.holds
       $rootScope.user_basic['holds'] = data.count
@@ -253,12 +251,12 @@ function HoldsCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details){
   $scope.item_details = function(record_id){
     item_details.show(record_id);
   };
-    
+
   $scope.holds();
-}
+});
 
 //Checkout Controller
-function CheckoutCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details){
+app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details){
   $scope.checkouts = function(){
     var token = localStorage.getItem('token')
     $rootScope.show_loading();
@@ -266,7 +264,7 @@ function CheckoutCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details
       method: 'GET',
       url: 'http://ilscatcher2.herokuapp.com/account/checkouts',
       params: {"token": token},
-      timeout: 15000, 
+      timeout: 15000,
     }).success(function(data) {
       $scope.checkouts = data.checkouts
       $rootScope.hide_loading();
@@ -298,42 +296,42 @@ function CheckoutCtrl($scope, $rootScope, $http, $ionicLoading, $q, item_details
       }else{
         alert("Your login has expired")
       }
-    })  
+    })
   };
 
   $scope.checkouts();
-}
+});
 
 //Card Controller
 
-function CardCtrl($scope, $rootScope, $ionicLoading, $location, login){
+app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $location, login){
   $scope.show_card = function(){
     if(localStorage.getItem('card')){
       var card = localStorage.getItem('card')
-      $("#barcode").JsBarcode(card,{format:"CODE128",displayValue:true,fontSize:15, width: 2}); 
+      $("#barcode").JsBarcode(card,{format:"CODE128",displayValue:true,fontSize:15, width: 2});
     }else{
       if($rootScope.logged_in == true){
         setTimeout(function() { $scope.show_card()}, 1500);
       }else{
         $location.path( "/home" );
         $rootScope.show_account();
-      }  
+      }
     }
   }
   $scope.show_card()
-}
+});
 
 
 
 //Location Controller
 
-function LocationCtrl($scope, $rootScope, $http, $ionicLoading){
+app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading){
   $scope.get_locations = function(){
     $rootScope.show_loading();
     $http({
       method: 'GET',
       url: 'http://ilscatcher2.herokuapp.com/web/locations',
-      timeout: 15000, 
+      timeout: 15000,
     }).success(function(data) {
       $scope.locations = data.locations
       $rootScope.hide_loading();
@@ -344,18 +342,18 @@ function LocationCtrl($scope, $rootScope, $http, $ionicLoading){
   };
 
   $scope.get_locations();
-}
+});
 
 
 //Events Controller
 
-function EventsCtrl($scope, $rootScope, $http, $ionicLoading){
+app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading){
   $scope.get_events = function(){
     $rootScope.show_loading();
     $http({
       method: 'GET',
       url: 'http://ilscatcher2.herokuapp.com/web/events',
-      timeout: 15000, 
+      timeout: 15000,
     }).success(function(data) {
       $scope.events = data.events
       $rootScope.hide_loading();
@@ -366,17 +364,17 @@ function EventsCtrl($scope, $rootScope, $http, $ionicLoading){
   };
 
   $scope.get_events();
-}
+});
 
 //News Controller
 
-function NewsCtrl($scope, $rootScope, $http, $ionicLoading){
+app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading){
   $scope.get_news = function(){
     $rootScope.show_loading();
     $http({
       method: 'GET',
       url: 'http://ilscatcher2.herokuapp.com/web/news',
-      timeout: 15000, 
+      timeout: 15000,
     }).success(function(data) {
       $scope.news = data.news
       $rootScope.hide_loading();
@@ -387,7 +385,7 @@ function NewsCtrl($scope, $rootScope, $http, $ionicLoading){
   };
 
   $scope.get_news();
-}
+});
 
 
 
@@ -397,9 +395,9 @@ app.factory('login', function($http, $rootScope){
     login: function(username, password){
       var username = username
       var password = password
-      
+
       if (localStorage['token'] != null){
-        var token = localStorage.getItem('token'),    
+        var token = localStorage.getItem('token'),
         login_url = 'http://ilscatcher2.herokuapp.com/account/check_token',
         login_params = {"token": token}
     }else{
@@ -411,7 +409,7 @@ app.factory('login', function($http, $rootScope){
       method: 'GET',
       url: login_url,
       params: login_params,
-      timeout: 15000, 
+      timeout: 15000,
     }).success(function(data) {
        // response data
       $rootScope.hide_loading();
@@ -424,54 +422,48 @@ app.factory('login', function($http, $rootScope){
         localStorage.setItem('card', data.card)
         $rootScope.user_basic = data
         $rootScope.logged_in = true
-      }   
+      }
     }).error(function(){
       alert("server taking to long to respond")
       $rootScope.hide_loading();
     });
-    
+
     }
   }
 });
 
-app.factory('item_details', function($http, $ionicModal, $rootScope){
-  return {
-    show: function(record_id, $scope){
-
-      $scope = $scope || $rootScope.$new();
-
-      $ionicModal.fromTemplateUrl('/template/item_modal.html', function(modal){
-        $scope.modal = modal;
-      }, 
-      {
-        scope: $scope,
-        animation: 'slide-in-up'
-      });
-
-      $scope.openModal = function() {
-        $scope.modal.show();
-      };
-      $scope.closeModal = function() {
-        $scope.modal.hide();
-      };
-
-      $rootScope.show_loading();
-
-
-      $http({
-        method: 'GET',
-        url: 'http://ilscatcher2.herokuapp.com/items/details',
-        params: {"record": record_id},
-        timeout: 15000, 
-      }).success(function(data){
-          $scope.openModal();
-          $scope.details = data.item_details
-          $scope.copies = data.copies
-          $rootScope.hide_loading();
-      })
-    }  
-  }
-})
+app.factory('item_details', function($http, $ionicModal, $rootScope) {
+    return {
+        show: function(record_id, $scope) {
+            $scope = $scope || $rootScope.$new();
+            $ionicModal.fromTemplateUrl('/template/item_modal.html', function(modal) {
+                $scope.modal = modal;
+            },
+            {
+                scope: $scope,
+                animation: 'slide-in-up'
+            });
+            $scope.openModal = function() {
+                $scope.modal.show();
+            };
+            $scope.closeModal = function() {
+                $scope.modal.hide();
+            };
+            $rootScope.show_loading();
+            $http({
+                method: 'GET',
+                url: 'http://ilscatcher2.herokuapp.com/items/details',
+                params: {"record": record_id},
+                timeout: 15000,
+            }).success(function(data) {
+                $scope.openModal();
+                $scope.details = data.item_details
+                $scope.copies = data.copies
+                $rootScope.hide_loading();
+            })
+        }
+    }
+});
 
 app.factory('hold', function($http, $rootScope, login){
   return {
@@ -506,8 +498,8 @@ app.factory('hold', function($http, $rootScope, login){
         $rootScope.hide_loading(); 
         alert("server taking to long to respond")
       });     
-    }   
     }
+    }   
   }
 });
 
@@ -519,7 +511,6 @@ app.directive('ngEnter', function () {
                 scope.$apply(function (){
                     scope.$eval(attrs.ngEnter);
                 });
-
                 event.preventDefault();
             }
         });
