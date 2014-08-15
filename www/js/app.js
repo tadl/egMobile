@@ -58,7 +58,7 @@ var app = angular.module('egmobile', ['ionic'])
   })
 
   .state('main.search', {
-    url: 'search?query',
+    url: 'search?query&format&sort&availability&loc&qtype',
     templateUrl: '/template/search.html',
     controller: 'SearchCtrl',
   })
@@ -106,26 +106,37 @@ var app = angular.module('egmobile', ['ionic'])
 //Search Controller
 function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, item_details){
   $scope.advance_search = false
+  
   $scope.search = function(more){
-    if ($stateParams.query != $scope.query){
-       $scope.page = 0
-       $scope.current_search = $scope.query
-      $location.path('/search').search('query', $scope.query);
-      return
-    }
-
-    
 
     if(more != 'true'){
       $scope.page = 0;
       $rootScope.show_loading();
     }
 
+   
+    var search_params = {}
+    search_params['query'] = $scope.query
+    search_params['format'] = $scope.format
+    search_params['sort'] = $scope.sort
+    search_params['availability'] = $scope.availability
+    search_params['loc'] = $scope.loc
+    search_params['qtype'] = $scope.qtype
+
+    if ($stateParams.query != $scope.query || $stateParams.format != $scope.format || $stateParams.sort != $scope.sort || $stateParams.availability != $scope.availability || $stateParams.loc != $scope.loc || $stateParams.qtype != $scope.qtype){
+      $scope.current_search = $scope.query
+      $location.path('/search').search(search_params);
+      return
+    }
+
+    search_params['page'] = $scope.page
+
+
     $http({
       method: 'GET',
       url: 'http://ilscatcher2.herokuapp.com/search/basic',
       timeout: 15000,
-      params: {query: $scope.query, page: $scope.page}
+      params: search_params
     }).success(function(data) {
        // response data
       $scope.page = data.page
@@ -164,7 +175,17 @@ function SearchCtrl($scope, $rootScope, $http, $location, $stateParams, hold, it
     hold.place(record_id);
   }
 
-  $scope.query = $stateParams.query;  
+  $scope.query = $stateParams.query;
+  $scope.format = $stateParams.format;
+  $scope.sort = $stateParams.sort;
+  $scope.availability = $stateParams.availability; 
+  $scope.loc = $stateParams.loc
+  $scope.qtype = $stateParams.qtype
+
+  if($scope.format != 'all' || $scope.sort != 'relevance' || $scope.loc != '22' || $scope.availability != 'off' || $scope.qtype != 'keyword' ){
+    $scope.advance_search = true
+  }
+
   if($scope.query != null || $scope.current_search != $scope.query ){
     $scope.search();
   }
@@ -467,27 +488,25 @@ app.factory('hold', function($http, $rootScope, login){
         url: 'http://ilscatcher2.herokuapp.com/account/place_holds',
         params: {"record_ids": record_ids, "token": token},
         timeout: 15000, 
-    }).success(function(data) {
+      }).success(function(data) {
       $rootScope.hide_loading(); 
-      if (data.message != 'Invalid token'){
-        alert(data.confirmation_messages[0].message)
-        if(data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ){
-          var hold_button = document.getElementById('hold_' + record_ids)
-          hold_button.innerHTML = "On Hold";
-          hold_button.disabled = true;
+        if (data.message != 'Invalid token'){
+          alert(data.confirmation_messages[0].message)
+          if(data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ){
+            var hold_button = document.getElementById('hold_' + record_ids)
+            hold_button.innerHTML = "On Hold";
+            hold_button.disabled = true;
+            login.login();
+          }  
+        }else{
+          alert("bad token")
           login.login();
-        }  
-      }else{
-        alert("bad token")
-        login.login();
-      }
-    }).error(function(){
-      $rootScope.hide_loading(); 
-      alert("server taking to long to respond")
-    });
-        
-      }
-       
+        }
+      }).error(function(){
+        $rootScope.hide_loading(); 
+        alert("server taking to long to respond")
+      });     
+    }   
     }
   }
 });
