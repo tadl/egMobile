@@ -104,7 +104,7 @@ var app = angular.module('egmobile', ['ionic'])
 })
 
 //Search Controller
-app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, hold, item_details){
+app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, popup, hold, item_details){
   $scope.advance_search = false
   
   $scope.search = function(more){
@@ -159,6 +159,10 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
 
   $scope.item_details = function(record_id){
     item_details.show(record_id);
+  };
+
+  $scope.showAlert = function(title,message){
+      popup.alert(title,message);
   };
 
   $scope.toggle_advanced = function(){
@@ -388,7 +392,6 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading){
 });
 
 
-
 //Login Factory
 app.factory('login', function($http, $rootScope){
   return {
@@ -465,10 +468,25 @@ app.factory('item_details', function($http, $ionicModal, $rootScope) {
     }
 });
 
-app.factory('hold', function($http, $rootScope, login){
+app.factory('popup', function($rootScope, $ionicPopup, $timeout) {
+    return {
+        alert: function(title, message, $scope) {
+            $scope = $scope || $rootScope.$new();
+            
+            var alertPopup = $ionicPopup.alert({
+                title: title,
+                template: message
+            });
+            alertPopup.then(function(res) {
+                console.log('moo');
+            });
+        }
+    }
+});
+
+app.factory('hold', function($http, $rootScope, login, popup){
   return {
     place: function(record_ids){
-      
       var record_ids = record_ids
       if ($rootScope.logged_in == false){
         alert("login to place hold")
@@ -483,7 +501,8 @@ app.factory('hold', function($http, $rootScope, login){
       }).success(function(data) {
       $rootScope.hide_loading(); 
         if (data.message != 'Invalid token'){
-          alert(data.confirmation_messages[0].message)
+          //alert(data.confirmation_messages[0].message)
+          popup.alert('Alert',data.confirmation_messages[0].message);
           if(data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ){
             var hold_button = document.getElementById('hold_' + record_ids)
             hold_button.innerHTML = "On Hold";
