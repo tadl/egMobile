@@ -106,13 +106,13 @@ var app = angular.module('egmobile', ['ionic'])
 //Search Controller
 app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, popup, hold, item_details){
   $scope.advance_search = false
-  
+
   $scope.search = function(more){
     if(more != 'true'){
       $scope.page = 0;
       $rootScope.show_loading();
     }
-   
+
     var search_params = {}
     search_params['query'] = $scope.query
     search_params['format'] = $scope.format
@@ -152,7 +152,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
       $scope.$broadcast('scroll.infiniteScrollComplete');
     }).error(function(){
       $rootScope.hide_loading();
-      alert("server taking to long to respond")
+      popup.alert("Oops","The server is taking too long to respond, please try again.")
 
     });
   };
@@ -180,7 +180,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
   $scope.query = $stateParams.query;
   $scope.format = $stateParams.format;
   $scope.sort = $stateParams.sort;
-  $scope.availability = $stateParams.availability; 
+  $scope.availability = $stateParams.availability;
   $scope.loc = $stateParams.loc
   $scope.qtype = $stateParams.qtype
 
@@ -213,7 +213,7 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
 });
 
 //Hold Controller
-app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details){
+app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details, popup){
   $scope.holds = function(){
     var token = localStorage.getItem('token')
     $rootScope.show_loading();
@@ -226,7 +226,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
       $scope.holds = data.holds
       $rootScope.hide_loading();
     }).error(function(){
-      alert("server taking to long to respond")
+      popup.alert("Oops","The server is taking too long to respond, please try again.")
       $rootScope.hide_loading();
     });
   };
@@ -245,7 +245,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
       $rootScope.user_basic['holds'] = data.count
       $rootScope.hide_loading();
     }).error(function(){
-      alert("server taking to long to respond")
+      popup.alert("Oops","The server is taking too long to respond, please try again.")
       $rootScope.hide_loading();
     });
   }
@@ -260,7 +260,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
 });
 
 //Checkout Controller
-app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details){
+app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details, login, popup){
   $scope.checkouts = function(){
     var token = localStorage.getItem('token')
     $rootScope.show_loading();
@@ -273,7 +273,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicLoading
       $scope.checkouts = data.checkouts
       $rootScope.hide_loading();
     }).error(function(){
-      alert("server taking to long to respond")
+      popup.alert("Oops","The server is taking too long to respond, please try again.")
       $rootScope.hide_loading();
     });
   };
@@ -283,6 +283,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicLoading
   };
 
   $scope.renew = function(checkout_id){
+      $rootScope.show_loading();
     var token = localStorage.getItem('token')
     $http({
       method: 'GET',
@@ -290,15 +291,18 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicLoading
       params: {"token": token, "circ_ids": checkout_id},
       timeout: 15000,
     }).success(function(data){
+        $rootScope.hide_loading();
       if (data.message != 'Invalid token'){
         if (data.confirmation != null){
-          alert(data.confirmation);
+          popup.alert('Renewal response',data.confirmation);
         }else{
-          alert(data.errors[0].message);
+          popup.alert('Error',data.errors[0].message);
         }
         $scope.checkouts = data.checkouts
       }else{
-        alert("Your login has expired")
+        popup.alert('Oops','Your login session has expired. Please log in again.')
+        login.login();
+        $rootScope.show_account();
       }
     })
   };
@@ -391,7 +395,6 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading){
   $scope.get_news();
 });
 
-
 //Login Factory
 app.factory('login', function($http, $rootScope){
   return {
@@ -472,14 +475,17 @@ app.factory('popup', function($rootScope, $ionicPopup, $timeout) {
     return {
         alert: function(title, message, $scope) {
             $scope = $scope || $rootScope.$new();
-            
+
             var alertPopup = $ionicPopup.alert({
                 title: title,
                 template: message
             });
             alertPopup.then(function(res) {
-                console.log('moo');
+                console.log(res);
             });
+            $timeout(function() {
+                alertPopup.close();
+            }, 10000);
         }
     }
 });
@@ -497,9 +503,9 @@ app.factory('hold', function($http, $rootScope, login, popup){
         method: 'GET',
         url: 'http://ilscatcher2.herokuapp.com/account/place_holds',
         params: {"record_ids": record_ids, "token": token},
-        timeout: 15000, 
+        timeout: 15000,
       }).success(function(data) {
-      $rootScope.hide_loading(); 
+      $rootScope.hide_loading();
         if (data.message != 'Invalid token'){
           //alert(data.confirmation_messages[0].message)
           popup.alert('Alert',data.confirmation_messages[0].message);
@@ -508,17 +514,18 @@ app.factory('hold', function($http, $rootScope, login, popup){
             hold_button.innerHTML = "On Hold";
             hold_button.disabled = true;
             login.login();
-          }  
+          }
         }else{
-          alert("bad token")
+          popup.alert("Oops","Your login session has expired, please log in again.")
           login.login();
+          $rootScope.show_account();
         }
       }).error(function(){
-        $rootScope.hide_loading(); 
+        $rootScope.hide_loading();
         alert("server taking to long to respond")
-      });     
+      });
     }
-    }   
+    }
   }
 });
 
