@@ -1,9 +1,9 @@
 /* Empty. Add your own CSS if you like */
 
 .cover_search_results {
-    max-height: 200px;
-    height: 100%;
-    width: auto;
+    width: 20%;
+    max-width: 200px;
+    min-width: 100px;
     float: left;
     margin: 10px;
 }
