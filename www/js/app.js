@@ -465,6 +465,13 @@ app.factory('item_details', function($http, $ionicModal, $rootScope) {
                 $scope.openModal();
                 $scope.details = data.item_details
                 $scope.copies = data.copies
+                $scope.copies_on_shelf = data.copies_on_shelf
+                var locations = new Array();
+                for (var i = 0; i< data.copies.length; i++){
+                  locations.push(data.copies[i]['location'])
+                }
+                $scope.locations = jQuery.unique(locations)
+
                 $rootScope.hide_loading();
             })
         }
