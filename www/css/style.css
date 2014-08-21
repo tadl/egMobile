@@ -23,7 +23,13 @@
 
 .location_image {
     max-width: 300px;
-    width: 50%;
+    width: 40%;
+    margin: 5px 5px 0 0;
+    float: left;
+}
+h2.location_name {
+    text-align: center;
+    font-size: 1.2em;
 }
 
 .detail_key {
@@ -61,11 +67,14 @@ div.menu_div:hover {
 .hours-display {
 }
 .hours-row-odd {
-    background-color:#fff;
+    background-color: #fff;
 }
 .hours-row-even {
-    background-color:#eee;
+    background-color: #eee;
+}
+.hours-row {
+    padding:3px 10px;
 }
 .hours-row span.detail_value {
-    float:right;
+    float: right;
 }
