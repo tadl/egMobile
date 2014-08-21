@@ -22,13 +22,13 @@
                 <span class="detail_value item-text-wrap">{{details.contents}}</span>
             </div>		
         </div>
-        <div class="item">
+        <div class="item" ng-show="copies_on_shelf.length">
             <span class="detail_title">Copies on the shelf at</span>
             <div ng-repeat="location in locations">
                 <span class="detail_key">{{location}}</span>
                 <div ng-repeat="copy in copies_on_shelf">
                   <div class="row responsive-sm" ng-if="copy.location == location">
-                    {{copy.shelving_location}} >> {{copy.call_number}}
+                    {{copy.shelving_location}} &raquo; {{copy.call_number}}
                   </div>
                 </div>  
             </div>

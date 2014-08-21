@@ -467,8 +467,8 @@ app.factory('item_details', function($http, $ionicModal, $rootScope) {
                 $scope.copies = data.copies
                 $scope.copies_on_shelf = data.copies_on_shelf
                 var locations = new Array();
-                for (var i = 0; i< data.copies.length; i++){
-                  locations.push(data.copies[i]['location'])
+                for (var i = 0; i< data.copies_on_shelf.length; i++){
+                  locations.push(data.copies_on_shelf[i]['location'])
                 }
                 $scope.locations = jQuery.unique(locations)
 
