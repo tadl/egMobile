@@ -19,16 +19,16 @@
             {{$root.user_basic.full_name}}
         </div>
         <a ui-sref="main.checkouts" class="item" menu-close>
-            Checkouts: <span class="badge badge-positive">{{$root.user_basic.checkouts}}</span>
+            Checkouts <span class="badge badge-positive">{{$root.user_basic.checkouts}}</span>
         </a>
         <a ui-sref="main.holds" class="item" menu-close>
-            Holds: <span class="badge badge-positive">{{$root.user_basic.holds}}</span>
+            Holds <span class="badge badge-positive">{{$root.user_basic.holds}}</span>
         </a>
-        <a ui-sref="main.card" class="item item-icon-left" menu-close>
-            <i class="icon ion-card"></i> Library Card 
+        <a ui-sref="main.card" class="item item-icon-right" menu-close>
+            <i class="icon ion-card"></i>Library Card
         </a>
-        <div class="item" ng-hide="$root.user_basic.fine == '$0.00'">
-            Fines: <span class="badge badge-positive">{{$root.user_basic.fine}}</span>
+        <div class="item" ng-hide="$root.user_basic.fine == '0.00'">
+            Fines <span ng-class="{false: 'badge-positive', true: 'badge-assertive'}[$root.user_basic.fine >= '5.00']" class="badge">{{$root.user_basic.fine | currency}}</span>
         </div>
     </div>
     <div style="margin:15px;">
