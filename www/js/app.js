@@ -260,83 +260,83 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
 });
 
 //Checkout Controller
-app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, $ionicLoading, $q, item_details, login, popup){
-  $scope.checkouts = function(){
-    var token = localStorage.getItem('token')
-    $rootScope.show_loading();
-    $http({
-      method: 'GET',
-      url: 'http://ilscatcher2.herokuapp.com/account/checkouts',
-      params: {"token": token},
-      timeout: 15000,
-    }).success(function(data) {
-        var rightnow = new Date();
-        var renewids = [];
-        jQuery.each(data.checkouts, function() {
-            var due = new Date(this.iso_due_date);
-            if (due < rightnow) { this.overdue = true; }
-            else { this.overdue = false; }
-            if ((this.overdue == true) && (this.renew_attempts > 0)) {
-                this.renew_urgent = true;
-                renewids.push(Number(this.checkout_id));
-            } else { this.renew_urgent = false; }
+app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, $ionicLoading, $q, item_details, login, popup) {
+    $scope.checkouts = function() {
+        var token = localStorage.getItem('token')
+        $rootScope.show_loading();
+        $http({
+            method: 'GET',
+            url: 'http://ilscatcher2.herokuapp.com/account/checkouts',
+            params: {"token": token},
+            timeout: 15000,
+        }).success(function(data) {
+            var rightnow = new Date();
+            var renewids = [];
+            jQuery.each(data.checkouts, function() {
+                var due = new Date(this.iso_due_date);
+                if (due < rightnow) { this.overdue = true; }
+                else { this.overdue = false; }
+                if ((this.overdue == true) && (this.renew_attempts > 0)) {
+                    this.renew_urgent = true;
+                    renewids.push(Number(this.checkout_id));
+                } else { this.renew_urgent = false; }
+            });
+            if (renewids.length) {
+                console.log(renewids);
+                var message = 'You have ' + renewids.length + ' overdue item' + ((renewids.length>1)?'s':'')  + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Oops!',
+                    template: message,
+                    okText: 'Yes',
+                    cancelText: 'Not now'
+                });
+                confirmPopup.then(function(res) {
+                    if (res) {
+                        jQuery.each(renewids, function() {
+                            $scope.renew(this);
+                        });
+                        console.log(res);
+                    } else {
+                        // maybe set a var in sessionstorage to skip this until expiry/logout
+                    }
+                });
+            }
+            $scope.checkouts = data.checkouts
+            $rootScope.hide_loading();
+        }).error(function() {
+            popup.alert("Oops","The server is taking too long to respond, please try again.")
+            $rootScope.hide_loading();
         });
-        if (renewids.length) {
-            console.log(renewids);
-            var message = 'You have ' + renewids.length + ' overdue item' + ((renewids.length>1)?'s':'')  + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
-            var confirmPopup = $ionicPopup.confirm({
-                title: 'Oops!',
-                template: message,
-                okText: 'Yes',
-                cancelText: 'Not now'
-            });
-            confirmPopup.then(function(res) {
-                if (res) {
-                    jQuery.each(renewids, function() {
-                        $scope.renew(this);
-                    });
-                    console.log(res);
-                } else {
-                    // maybe set a var in sessionstorage to skip this until expiry/logout
-                }
-            });
-        }
-      $scope.checkouts = data.checkouts
-      $rootScope.hide_loading();
-    }).error(function(){
-      popup.alert("Oops","The server is taking too long to respond, please try again.")
-      $rootScope.hide_loading();
-    });
-  };
+    };
 
-  $scope.item_details = function(record_id){
-    item_details.show(record_id);
-  };
+    $scope.item_details = function(record_id) {
+        item_details.show(record_id);
+    };
 
-  $scope.renew = function(checkout_id){
-      $rootScope.show_loading();
-    var token = localStorage.getItem('token')
-    $http({
-      method: 'GET',
-      url: 'http://ilscatcher2.herokuapp.com/account/renew_items',
-      params: {"token": token, "circ_ids": checkout_id},
-      timeout: 15000,
-    }).success(function(data){
-        $rootScope.hide_loading();
-      if (data.message != 'Invalid token'){
-          var renewresponse = "";
-          if (data.confirmation != null) { renewresponse += data.confirmation + '<br/>'; }
-          if (data.errors.length) { renewresponse += data.errors[0].message + '<br/>'; }
-          popup.alert('Renewal Response',renewresponse);
-          $scope.checkouts = data.checkouts
-      }else{
-        popup.alert('Oops','Your login session has expired. Please log in again.')
-        login.login();
-        $rootScope.show_account();
-      }
-    })
-  };
-  $scope.checkouts();
+    $scope.renew = function(checkout_id) {
+        $rootScope.show_loading();
+        var token = localStorage.getItem('token')
+        $http({
+            method: 'GET',
+            url: 'http://ilscatcher2.herokuapp.com/account/renew_items',
+            params: {"token": token, "circ_ids": checkout_id},
+            timeout: 15000,
+        }).success(function(data) {
+            $rootScope.hide_loading();
+            if (data.message != 'Invalid token') {
+                var renewresponse = "";
+                if (data.confirmation != null) { renewresponse += data.confirmation + '<br/>'; }
+                if (data.errors.length) { renewresponse += data.errors[0].message + '<br/>'; }
+                popup.alert('Renewal Response',renewresponse);
+                $scope.checkouts = data.checkouts
+            } else {
+                popup.alert('Oops','Your login session has expired. Please log in again.')
+                login.login();
+                $rootScope.show_account();
+            }
+        })
+    };
+    $scope.checkouts();
 });
 
 //Card Controller
