@@ -270,6 +270,14 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicLoading
       params: {"token": token},
       timeout: 15000,
     }).success(function(data) {
+        var rightnow = new Date();
+        jQuery.each(data.checkouts, function() {
+            var due = new Date(this.iso_due_date);
+            if (due < rightnow) { this.overdue = true; }
+            else { this.overdue = false; }
+            if ((this.overdue == true) && (this.renew_attempts > 0)) { this.renew_urgent = true; }
+            else { this.renew_urgent = false; }
+        });
       $scope.checkouts = data.checkouts
       $rootScope.hide_loading();
     }).error(function(){
@@ -471,7 +479,6 @@ app.factory('item_details', function($http, $ionicModal, $rootScope) {
                   locations.push(data.copies_on_shelf[i]['location'])
                 }
                 $scope.locations = jQuery.unique(locations)
-
                 $rootScope.hide_loading();
             })
         }

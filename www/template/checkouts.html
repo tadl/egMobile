@@ -9,10 +9,17 @@
     </div>
     <div class="item">
         <div>
-            <span class="detail_key">Due Date: </span>
-            <span class="detail_value">{{checkout.due_date}}</span>
+            <span class="detail_key" ng-class="{true: 'overdue'}[checkout.overdue]">Due Date: </span>
+            <span class="detail_value" ng-class="{true: 'overdue'}[checkout.overdue]">{{checkout.due_date}}</span>
+            <span class="detail_value overdue" ng-show="checkout.overdue"> (OVERDUE)</span>
         </div>
-        <div>
+        <div ng-show="!checkout.renew_urgent && checkout.overdue">
+            <span class="detail_key overdue">Please return this item as soon as possible.</span>
+        </div>
+        <div ng-show="checkout.renew_attempts == 0">
+            <span class="detail_value overdue">No renewals remaining.</span>
+        </div>
+        <div ng-show="checkout.renew_attempts > 0">
             <span class="detail_key">Renewal Attempts Remaining: </span>
             <span class="detail_value">{{checkout.renew_attempts}}</span>
         </div>

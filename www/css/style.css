@@ -78,3 +78,11 @@ div.menu_div:hover {
 .hours-row span.detail_value {
     float: right;
 }
+
+.overdue {
+    color: #ff0000;
+}
+
+.item {
+    white-space: normal;
+}
