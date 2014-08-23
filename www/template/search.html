@@ -1,11 +1,12 @@
 
   <div class="list">
     <div class="item item-input-inset">
+      <i class="button-clear icon ion-search"></i>
       <label class="item-input-wrapper">
-        <i class="icon ion-search placeholder-icon"></i>
-        <input type="text" ng-model="query" placeholder="Search" ng-enter="search()">
+        <input type="text" ng-model="query" placeholder="Search the Catalog" ng-enter="search()">
       </label>
-      <button class="button button-clear icon ion-gear-a" ng-click="toggle_advanced()"></button>
+      <i class="button-clear icon ion-close-circled" title="Reset Search" name="Reset Search" ng-click="resetSearch()"></i>
+      <i class="button-clear icon ion-settings" title="Search Settings" name="Search Settings" ng-click="toggle_advanced()"></i>
     </div>
     <div id="search_options" ng-show="advance_search == true">
       <label class="item item-input item-select">

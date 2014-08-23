@@ -86,3 +86,8 @@ div.menu_div:hover {
 .item {
     white-space: normal;
 }
+
+.button-clear.icon {
+    font-size: 20px;
+    cursor: pointer;
+}

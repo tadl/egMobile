@@ -165,6 +165,10 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
       popup.alert(title,message);
   };
 
+  $scope.resetSearch = function() {
+      $scope.query = "";
+  }
+
   $scope.toggle_advanced = function(){
     if($scope.advance_search == false){
       $scope.advance_search = true
