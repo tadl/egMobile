@@ -91,3 +91,12 @@ div.menu_div:hover {
     font-size: 20px;
     cursor: pointer;
 }
+.card-icon {
+    margin-right: 20px;
+}
+.center {
+    text-align: center;
+}
+.barcode-wrap {
+    padding:20px;
+}

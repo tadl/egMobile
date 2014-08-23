@@ -25,7 +25,7 @@
             Holds <span class="badge badge-positive">{{$root.user_basic.holds}}</span>
         </a>
         <a ui-sref="main.card" class="item item-icon-right" menu-close>
-            <i class="icon ion-card"></i>Library Card
+            <i class="icon ion-card card-icon"></i>Library Card
         </a>
         <div class="item" ng-hide="$root.user_basic.fine == '0.00'">
             Fines <span ng-class="{false: 'badge-positive', true: 'badge-assertive'}[$root.user_basic.fine >= '5.00']" class="badge">{{$root.user_basic.fine | currency}}</span>

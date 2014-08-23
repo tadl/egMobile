@@ -1,4 +1,4 @@
-var app = angular.module('egmobile', ['ionic'])
+var app = angular.module('egmobile', ['ionic','ngFitText'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -38,7 +38,7 @@ var app = angular.module('egmobile', ['ionic'])
 })
 
 //Create routes
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, fitTextConfigProvider) {
   $stateProvider
 
   .state('main', {
@@ -100,6 +100,11 @@ var app = angular.module('egmobile', ['ionic'])
   })
 
   $urlRouterProvider.otherwise("/search");
+
+  fitTextConfigProvider.config = {
+      debounce: true,
+      delay: 1000
+  };
 
 })
 
