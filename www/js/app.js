@@ -102,7 +102,7 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
   $urlRouterProvider.otherwise("/search");
 
   fitTextConfigProvider.config = {
-      debounce: true,
+      debounce: false,
       delay: 1000
   };
 
