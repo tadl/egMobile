@@ -272,10 +272,13 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
         }).success(function(data) {
             var rightnow = new Date();
             var renewids = [];
+            var dueids = [];
             jQuery.each(data.checkouts, function() {
                 var due = new Date(this.iso_due_date);
-                if (due < rightnow) { this.overdue = true; }
-                else { this.overdue = false; }
+                if (due < rightnow) {
+                    this.overdue = true;
+                    dueids.push(Number(this.checkout_id));
+                } else { this.overdue = false; }
                 if ((this.overdue == true) && (this.renew_attempts > 0)) {
                     this.renew_urgent = true;
                     renewids.push(Number(this.checkout_id));
@@ -283,19 +286,17 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
             });
             if (renewids.length) {
                 console.log(renewids);
-                var message = 'You have ' + renewids.length + ' overdue item' + ((renewids.length>1)?'s':'')  + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
+                var message = 'You have ' + dueids.length + ' overdue item' + ((dueids.length>1)?'s,':',') + renewids.length + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
                 var confirmPopup = $ionicPopup.confirm({
-                    title: 'Oops!',
+                    title: 'Overdue Items',
                     template: message,
                     okText: 'Yes',
                     cancelText: 'Not now'
                 });
                 confirmPopup.then(function(res) {
                     if (res) {
-                        jQuery.each(renewids, function() {
-                            $scope.renew(this);
-                        });
-                        console.log(res);
+                        $scope.renew(renewids.toString());
+                        console.log(res + ' ' + renewids.toString());
                     } else {
                         // maybe set a var in sessionstorage to skip this until expiry/logout
                     }
@@ -324,6 +325,17 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
         }).success(function(data) {
             $rootScope.hide_loading();
             if (data.message != 'Invalid token') {
+                var rightnow = new Date();
+                var renewids = [];
+                jQuery.each(data.checkouts, function() {
+                    var due = new Date(this.iso_due_date);
+                    if (due < rightnow) { this.overdue = true; }
+                    else { this.overdue = false; }
+                    if ((this.overdue == true) && (this.renew_attempts > 0)) {
+                        this.renew_urgent = true;
+                        renewids.push(Number(this.checkout_id));
+                    } else { this.renew_urgent = false; }
+                });
                 var renewresponse = "";
                 if (data.confirmation != null) { renewresponse += data.confirmation + '<br/>'; }
                 if (data.errors.length) { renewresponse += data.errors[0].message + '<br/>'; }
