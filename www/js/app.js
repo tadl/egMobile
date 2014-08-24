@@ -17,9 +17,10 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
 .run(function($rootScope, $ionicSideMenuDelegate, $ionicLoading, $ionicScrollDelegate) {
   $rootScope.logged_in = ""
   $rootScope.user_basic = ""
-  $rootScope.show_loading = function(){
+  $rootScope.show_loading = function(custom){
+      var loadingtext = custom || 'Loading...';
     $ionicLoading.show({
-      template: '<i class="icon ion-loading-d big_loading"></i> Loading...'
+      template: '<i class="icon ion-loading-d big_loading"></i> ' + loadingtext
     });
   }
 
@@ -115,7 +116,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
   $scope.search = function(more){
     if(more != 'true'){
       $scope.page = 0;
-      $rootScope.show_loading();
+      $rootScope.show_loading('Searching...');
     }
 
     var search_params = {}
@@ -225,7 +226,7 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
 app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details, popup){
   $scope.holds = function(){
     var token = localStorage.getItem('token')
-    $rootScope.show_loading();
+    $rootScope.show_loading('Loading holds...');
     $http({
       method: 'GET',
       url: 'http://ilscatcher2.herokuapp.com/account/holds',
@@ -324,7 +325,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
     };
 
     $scope.renew = function(checkout_id) {
-        $rootScope.show_loading();
+        $rootScope.show_loading('Renewing...');
         var token = localStorage.getItem('token')
         $http({
             method: 'GET',
@@ -505,7 +506,7 @@ app.factory('item_details', function($http, $ionicModal, $rootScope) {
             $scope.closeModal = function() {
                 $scope.modal.hide();
             };
-            $rootScope.show_loading();
+            $rootScope.show_loading('Loading details...');
             $http({
                 method: 'GET',
                 url: 'http://ilscatcher2.herokuapp.com/items/details',
@@ -552,7 +553,7 @@ app.factory('hold', function($http, $rootScope, login, popup){
       if ($rootScope.logged_in == false){
         alert("login to place hold")
       }else{
-        $rootScope.show_loading();
+        $rootScope.show_loading('Placing hold...');
         var token = localStorage.getItem('token')
         $http({
         method: 'GET',
@@ -563,7 +564,7 @@ app.factory('hold', function($http, $rootScope, login, popup){
       $rootScope.hide_loading();
         if (data.message != 'Invalid token'){
           //alert(data.confirmation_messages[0].message)
-          popup.alert('Alert',data.confirmation_messages[0].message);
+          popup.alert('Hold Response',data.confirmation_messages[0].message);
           if(data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ){
             var hold_button = document.getElementById('hold_' + record_ids)
             hold_button.innerHTML = "On Hold";
@@ -577,7 +578,7 @@ app.factory('hold', function($http, $rootScope, login, popup){
         }
       }).error(function(){
         $rootScope.hide_loading();
-        alert("server taking to long to respond")
+        popup.alert('Sorry','server taking to long to respond')
       });
     }
     }
