@@ -20,7 +20,7 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
   $rootScope.show_loading = function(custom){
       var loadingtext = custom || 'Loading...';
     $ionicLoading.show({
-      template: '<i class="icon ion-loading-d big_loading"></i> ' + loadingtext
+      template: '<i class="icon ion-loading-d big_loading"></i> <span class="loading_text">' + loadingtext + '</span>'
     });
   }
 
