@@ -55,6 +55,8 @@ angular.module( 'ngFitText', [] )
           ? angular.element( window ).bind( 'resize', _debounce( function(){ scope.$apply( scope.resizer )}, config.delay ))
           : angular.element( window ).bind( 'resize', function(){ scope.$apply( scope.resizer )});
 
+        setTimeout(function() { scope.$apply( scope.resizer ); }, 500)
+
         function _debounce(a,b,c){var d;return function(){var e=this,f=arguments;clearTimeout(d),d=setTimeout(function(){d=null,c||a.apply(e,f)},b),c&&!d&&a.apply(e,f)}}
       }
     }
