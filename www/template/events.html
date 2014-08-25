@@ -1,11 +1,15 @@
 <div class="list">
- 	<h1 class="item item-divider">Upcoming Events</h1>
- </div>	
+    <h1 class="item item-divider">Upcoming Events</h1>
+</div>	
 <div class="card" ng-repeat="event in events">
-	<div class="item">
-    <h2>{{event.title}}</h2>
-    <img ng-src="{{event.image}}" class="event_image" ng-if="event.image"><br>
-    <span>{{event.date}}</span><br>
-    <span>{{event.location}}</span><br>
-  </div>
+    <div class="item">
+        <h2>{{event.title}}</h2>
+        <div class="cardbody-left">
+            <img ng-src="{{event.image}}" class="event_image" ng-if="event.image"><br>
+        </div>
+        <div class="cardbody-right">
+            <div>{{event.date}}</div>
+            <div>{{event.location}}</div>
+        </div>
+    </div>
 </div>

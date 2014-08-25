@@ -406,7 +406,7 @@ app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading
 
 //Events Controller
 
-app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading){
+app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, popup){
   $scope.get_events = function(){
     $rootScope.show_loading();
     $http({
@@ -417,7 +417,7 @@ app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading){
       $scope.events = data.events
       $rootScope.hide_loading();
     }).error(function(){
-      alert("server taking to long to respond")
+      popup.alert('Error','Server taking to long to respond')
       $rootScope.hide_loading();
     });
   };

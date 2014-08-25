@@ -21,6 +21,16 @@
     margin: 10px;
 }
 
+.event_image {
+}
+
+.cardbody-left {
+    float:left;
+}
+.cardbody-right {
+    float:right;
+}
+
 .location_image {
     max-width: 300px;
     width: 40%;
