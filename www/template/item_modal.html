@@ -7,12 +7,14 @@
     </ion-header-bar>
     <ion-content padding="true">
         <div class="item">
-            <span class="detail_title">{{details.title}}</span>
-            <br>	
-            <img ng-src="{{details.image}}" class="cover_item_details">
-            <span class="detail_key">Author(s) / Group: </span>
-            <span class="detail_value item-text-wrap">{{details.author}}</span>
-            <br>
+            <div>
+                <span class="detail_title">{{details.title}}</span>
+            </div>
+            <div>
+                <img ng-src="{{details.image}}" class="cover_item_details">
+                <span class="detail_key">Author(s) / Group: </span>
+                <span class="detail_value item-text-wrap">{{details.author}}</span>
+            </div>
             <div ng-show="details.summary != null">
                 <span class="detail_key">Summary: </span>
                 <span class="detail_value item-text-wrap">{{details.summary}}</span>

@@ -13,22 +13,25 @@
     vertical-align: middle;
 }
 
+.padbot {
+    padding-bottom: 5px;
+}
+.padtop {
+    padding-top: 5px;
+}
+.details-button {
+    float: right;
+}
+
 .cover_item_details {
-    max-height: 300px;
-    height: 100%;
-    width: auto;
+    width: 100%;
+    max-width: 200px;
+}
+
+.node_image {
     float: left;
-    margin: 10px;
-}
-
-.event_image {
-}
-
-.cardbody-left {
-    float:left;
-}
-.cardbody-right {
-    float:right;
+    padding-right: 10px;
+    max-width: 50%;
 }
 
 .location_image {
@@ -40,6 +43,10 @@
 h2.location_name {
     text-align: center;
     font-size: 1.2em;
+}
+h2.title {
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
 .detail_key {

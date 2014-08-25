@@ -362,7 +362,6 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
 });
 
 //Card Controller
-
 app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $location, login){
   $scope.show_card = function(){
     if(localStorage.getItem('card')){
@@ -380,10 +379,7 @@ app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $location
   $scope.show_card()
 });
 
-
-
 //Location Controller
-
 app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading){
   $scope.get_locations = function(){
     $rootScope.show_loading();
@@ -405,28 +401,28 @@ app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading
 
 
 //Events Controller
-
-app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, popup){
-  $scope.get_events = function(){
-    $rootScope.show_loading();
-    $http({
-      method: 'GET',
-      url: 'http://ilscatcher2.herokuapp.com/web/events',
-      timeout: 15000,
-    }).success(function(data) {
-      $scope.events = data.events
-      $rootScope.hide_loading();
-    }).error(function(){
-      popup.alert('Error','Server taking to long to respond')
-      $rootScope.hide_loading();
-    });
-  };
-
-  $scope.get_events();
+app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, popup, node_details){
+    $scope.get_events = function(){
+        $rootScope.show_loading();
+        $http({
+            method: 'GET',
+            url: 'http://ilscatcher2.herokuapp.com/web/events',
+            timeout: 15000,
+        }).success(function(data) {
+            $scope.events = data.events
+            $rootScope.hide_loading();
+        }).error(function(){
+            popup.alert('Error','Server taking to long to respond')
+            $rootScope.hide_loading();
+        });
+    };
+    $scope.node_details = function(record_id){
+        node_details.show(record_id);
+    };
+    $scope.get_events();
 });
 
 //News Controller
-
 app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading){
   $scope.get_news = function(){
     $rootScope.show_loading();
@@ -489,6 +485,41 @@ app.factory('login', function($http, $rootScope){
   }
 });
 
+/* node modal factory */
+app.factory('node_details', function($http, $ionicModal, $rootScope) {
+    return {
+        show: function(nid, $scope) {
+            $scope = $scope || $rootScope.$new();
+            $ionicModal.fromTemplateUrl('/template/node_modal.html', function(modal) {
+                $scope.modal = modal;
+            },
+            {
+                scope: $scope,
+                animation: 'slide-in-up'
+            });
+            $scope.openModal = function() {
+                $scope.modal.show();
+            };
+            $scope.closeModal = function() {
+                $scope.modal.hide();
+            };
+            $rootScope.show_loading('Loading details...');
+            $http({
+                method: 'GET',
+                url: 'https://www.tadl.org/export/node/json/' + nid,
+                timeout: 15000,
+            }).success(function(data) {
+                var nodebody = data.nodes[0].node.body;
+                $scope.node = data.nodes[0].node
+                $scope.node.body = nodebody.replace(/&nbsp;/gi,'');
+                $scope.openModal();
+                $rootScope.hide_loading();
+            })
+        }
+    }
+});
+
+/* item modal factory */
 app.factory('item_details', function($http, $ionicModal, $rootScope) {
     return {
         show: function(record_id, $scope) {
@@ -528,6 +559,7 @@ app.factory('item_details', function($http, $ionicModal, $rootScope) {
     }
 });
 
+/* popup alert factory */
 app.factory('popup', function($rootScope, $ionicPopup, $timeout) {
     return {
         alert: function(title, message, $scope) {
@@ -546,6 +578,7 @@ app.factory('popup', function($rootScope, $ionicPopup, $timeout) {
     }
 });
 
+/* hold factory */
 app.factory('hold', function($http, $rootScope, login, popup){
   return {
     place: function(record_ids){

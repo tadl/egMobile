@@ -3,13 +3,16 @@
 </div>	
 <div class="card" ng-repeat="event in events">
     <div class="item">
-        <h2>{{event.title}}</h2>
-        <div class="cardbody-left">
-            <img ng-src="{{event.image}}" class="event_image" ng-if="event.image"><br>
-        </div>
-        <div class="cardbody-right">
-            <div>{{event.date}}</div>
-            <div>{{event.location}}</div>
+        <h2 class="title">{{event.title}}</h2>
+        <div class="row">
+            <div class="col col-33">
+                <img ng-src="{{event.image}}" ng-show="event.image" class="cover_item_details" />
+            </div>
+            <div class="col col-66">
+                <div class="padbot">{{event.date}}</div>
+                <div class="padbot">at {{event.location}}</div>
+                <div><button class="button button-small button-positive details-button" ng-click="node_details({{event.nid}})">Details</button></div>
+            </div>
         </div>
     </div>
 </div>
