@@ -401,8 +401,8 @@ app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading
 
 
 //Events Controller
-app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, popup, node_details){
-    $scope.get_events = function(){
+app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, popup, node_details) {
+    $scope.get_events = function() {
         $rootScope.show_loading();
         $http({
             method: 'GET',
@@ -411,35 +411,37 @@ app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, 
         }).success(function(data) {
             $scope.events = data.events
             $rootScope.hide_loading();
-        }).error(function(){
+        }).error(function() {
             popup.alert('Error','Server taking to long to respond')
             $rootScope.hide_loading();
         });
     };
-    $scope.node_details = function(record_id){
+    $scope.node_details = function(record_id) {
         node_details.show(record_id);
     };
     $scope.get_events();
 });
 
 //News Controller
-app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading){
-  $scope.get_news = function(){
-    $rootScope.show_loading();
-    $http({
-      method: 'GET',
-      url: 'http://ilscatcher2.herokuapp.com/web/news',
-      timeout: 15000,
-    }).success(function(data) {
-      $scope.news = data.news
-      $rootScope.hide_loading();
-    }).error(function(){
-      alert("server taking to long to respond")
-      $rootScope.hide_loading();
-    });
-  };
-
-  $scope.get_news();
+app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, popup, node_details) {
+    $scope.get_news = function() {
+        $rootScope.show_loading();
+        $http({
+            method: 'GET',
+            url: 'http://ilscatcher2.herokuapp.com/web/news',
+            timeout: 15000,
+        }).success(function(data) {
+            $scope.news = data.news
+            $rootScope.hide_loading();
+        }).error(function() {
+            popup.alert('Error','server taking to long to respond')
+            $rootScope.hide_loading();
+        });
+    };
+    $scope.node_details = function(record_id) {
+        node_details.show(record_id);
+    };
+    $scope.get_news();
 });
 
 //Login Factory

@@ -16,7 +16,7 @@
         <div ng-show="!checkout.renew_urgent && checkout.overdue">
             <span class="detail_key overdue">Please return this item as soon as possible.</span>
         </div>
-        <div ng-show="checkout.renew_attempts == 0">
+        <div ng-show="checkout.renew_attempts <= 0">
             <span class="detail_value overdue">No renewals remaining.</span>
         </div>
         <div ng-show="checkout.renew_attempts > 0">
