@@ -4,13 +4,17 @@
 <div class="card" ng-repeat="location in locations">
     <div class="item">
         <h2 class="location_name">{{location.fullname}}</h2>
-        <div>
-            <img ng-src="http://www.tadl.org/sites/default/files/libraryphotos/{{location.shortname}}-200x125.jpg" class="location_image">
+        <div class="row responsive-sm">
+            <div class="col col-25 center">
+                <img ng-src="http://www.tadl.org/sites/default/files/libraryphotos/{{location.shortname}}-200x125.jpg" class="location_image">
+            </div>
+            <div class="col col-75 center">
+                <div>{{location.address}}</div>
+                <div>{{location.citystatezip}}</div>
+                <div><i class="icon ion-ios7-telephone"></i> <a href="tel:{{location.phone}}">{{location.phone}}</a></div>
+                <div><i class="icon ion-email"></i> <a href="mailto:{{location.email}}">{{location.email}}</a></div>
+            </div>
         </div>
-        <div>{{location.address}}</div>
-        <div>{{location.citystatezip}}</div>
-        <div><i class="icon ion-ios7-telephone"></i> <a href="tel:{{location.phone}}">{{location.phone}}</a></div>
-        <div><i class="icon ion-email"></i> <a href="mailto:{{location.email}}">{{location.email}}</a></div>
     </div>
     <div class="item hours-display">
         <div class="hours-row hours-row-odd">

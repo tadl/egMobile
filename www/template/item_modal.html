@@ -6,22 +6,26 @@
         </div>
     </ion-header-bar>
     <ion-content padding="true">
-        <div class="item">
-            <div>
+        <div class="item item-text-wrap">
+            <div class="row">
                 <span class="detail_title">{{details.title}}</span>
             </div>
-            <div>
-                <img ng-src="{{details.image}}" class="cover_item_details">
-                <span class="detail_key">Author(s) / Group: </span>
-                <span class="detail_value item-text-wrap">{{details.author}}</span>
+            <div class="row">
+                <div class="col col-25">
+                    <img ng-src="{{details.image}}" class="cover_item_details">
+                </div>
+                <div class="col col-75">
+                    <span class="detail_key">Author(s) / Group: </span>
+                    <span class="detail_value">{{details.author}}</span>
+                </div>
             </div>
-            <div ng-show="details.summary != null">
+            <div class="row" ng-show="details.summary != null">
                 <span class="detail_key">Summary: </span>
-                <span class="detail_value item-text-wrap">{{details.summary}}</span>
+                <span class="detail_value">{{details.summary}}</span>
             </div>
-            <div ng-show="details.contents != null">
+            <div div class="row" ng-show="details.contents != null">
                 <span class="detail_key">Contents: </span>
-                <span class="detail_value item-text-wrap">{{details.contents}}</span>
+                <span class="detail_value">{{details.contents}}</span>
             </div>		
         </div>
         <div class="item" ng-show="copies_on_shelf.length">

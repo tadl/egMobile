@@ -294,9 +294,14 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                     renewids.push(Number(this.checkout_id));
                 } else { this.renew_urgent = false; }
             });
-            if (renewids.length) {
-                console.log(renewids);
-                var message = 'You have ' + dueids.length + ' overdue item' + ((dueids.length>1)?'s,':',') + renewids.length + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
+            var renewall = sessionStorage.getItem('renewall');
+            if ((renewids.length) && (renewall != 'nope')) {
+                var message = '';
+                if (renewids.length == dueids.length) {
+                    message = 'You have ' + dueids.length + ' overdue item' + ((dueids.length>1)?'s':'') + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
+                } else {
+                    message = 'You have ' + dueids.length + ' overdue item' + ((dueids.length>1)?'s,':',') + renewids.length + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
+                }
                 var confirmPopup = $ionicPopup.confirm({
                     title: 'Overdue Items',
                     template: message,
@@ -306,9 +311,9 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                 confirmPopup.then(function(res) {
                     if (res) {
                         $scope.renew(renewids.toString());
-                        console.log(res + ' ' + renewids.toString());
                     } else {
                         // maybe set a var in sessionstorage to skip this until expiry/logout
+                        sessionStorage.setItem('renewall','nope');
                     }
                 });
             }
@@ -348,7 +353,11 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                 });
                 var renewresponse = "";
                 if (data.confirmation != null) { renewresponse += data.confirmation + '<br/>'; }
-                if (data.errors.length) { renewresponse += data.errors[0].message + '<br/>'; }
+                if (data.errors.length >= 1) { 
+                    jQuery.each(data.errors, function() {
+                        renewresponse += '<strong>' + this.title + '</strong> ' + this.message + ', '; 
+                    });
+                }
                 popup.alert('Renewal Response',renewresponse);
                 $scope.checkouts = data.checkouts
             } else {
@@ -445,7 +454,7 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
 });
 
 //Login Factory
-app.factory('login', function($http, $rootScope){
+app.factory('login', function($http, $rootScope, popup){
   return {
     login: function(username, password){
       var username = username
@@ -475,6 +484,11 @@ app.factory('login', function($http, $rootScope){
       } else {
         localStorage.setItem('token', data.token)
         localStorage.setItem('card', data.card)
+        var holdpickup = sessionStorage.getItem('holds');
+        if ((data.holds_ready >= 1) && (holdpickup != 'yep')) {
+            popup.alert('Holds available','You have holds available for pickup.');
+            sessionStorage.setItem('holds','yep');
+        }
         $rootScope.user_basic = data
         $rootScope.logged_in = true
       }
@@ -571,11 +585,10 @@ app.factory('popup', function($rootScope, $ionicPopup, $timeout) {
                 template: message
             });
             alertPopup.then(function(res) {
-                console.log(res);
             });
             $timeout(function() {
                 alertPopup.close();
-            }, 10000);
+            }, 20000);
         }
     }
 });
