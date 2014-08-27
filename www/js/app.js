@@ -273,7 +273,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
 app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, $ionicLoading, $q, item_details, login, popup) {
     $scope.checkouts = function() {
         var token = localStorage.getItem('token')
-        $rootScope.show_loading();
+        $rootScope.show_loading('Loading checkouts...');
         $http({
             method: 'GET',
             url: 'http://ilscatcher2.herokuapp.com/account/checkouts',
@@ -354,8 +354,11 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                 var renewresponse = "";
                 if (data.confirmation != null) { renewresponse += data.confirmation + '<br/>'; }
                 if (data.errors.length >= 1) { 
+                    var errcount = 0;
                     jQuery.each(data.errors, function() {
-                        renewresponse += '<strong>' + this.title + '</strong> ' + this.message + ', '; 
+                        errcount++;
+                        renewresponse += '<strong>' + this.title + '</strong> ' + this.message;
+                        renewresponse += (errcount == data.errors.length)?'.':', ';
                     });
                 }
                 popup.alert('Renewal Response',renewresponse);
