@@ -526,8 +526,10 @@ app.factory('node_details', function($http, $ionicModal, $rootScope) {
                 timeout: 15000,
             }).success(function(data) {
                 var nodebody = data.nodes[0].node.body;
+                var nodetitle = jQuery('<span>' + data.nodes[0].node.nodetitle + '</span>').text();
                 $scope.node = data.nodes[0].node
                 $scope.node.body = nodebody.replace(/&nbsp;/gi,'');
+                $scope.node.nodetitle = nodetitle;
                 $scope.openModal();
                 $rootScope.hide_loading();
             })
