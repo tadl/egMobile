@@ -528,10 +528,10 @@ app.factory('node_details', function($http, $ionicModal, $rootScope) {
                 url: 'https://www.tadl.org/export/node/json/' + nid,
                 timeout: 15000,
             }).success(function(data) {
-                var nodebody = data.nodes[0].node.body;
+                var nodebody = jQuery('<div>' + data.nodes[0].node.body + '</div>').text();
                 var nodetitle = jQuery('<span>' + data.nodes[0].node.nodetitle + '</span>').text();
-                $scope.node = data.nodes[0].node
-                $scope.node.body = nodebody.replace(/&nbsp;/gi,'');
+                $scope.node = data.nodes[0].node;
+                $scope.node.body = nodebody;
                 $scope.node.nodetitle = nodetitle;
                 $scope.openModal();
                 $rootScope.hide_loading();
