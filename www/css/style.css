@@ -71,7 +71,10 @@ div.menu_div:hover {
     width: 80%;
     max-width: 450px;
     display: block;
-    margin: 0 auto;
+    margin: 10px auto;
+}
+.barcode-wrap {
+    padding:20px;
 }
 
 .news_image {
@@ -110,7 +113,4 @@ div.menu_div:hover {
 }
 .center {
     text-align: center;
-}
-.barcode-wrap {
-    padding:20px;
 }
