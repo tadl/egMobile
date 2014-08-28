@@ -142,23 +142,22 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
       timeout: 15000,
       params: search_params
     }).success(function(data) {
-       // response data
       $scope.page = data.page
       $scope.more_results = data.more_results;
       $scope.new_results = data.results
-      if(more == 'true'){
+      if(more == 'true') {
         $scope.results = $scope.results.concat($scope.new_results)
         $scope.page = +$scope.page + 1
 
-      }else{
+      } else {
         $scope.results = data.results;
         $scope.page = +$scope.page + 1
       }
       $rootScope.hide_loading();
       $scope.$broadcast('scroll.infiniteScrollComplete');
-    }).error(function(){
+    }).error(function() {
       $rootScope.hide_loading();
-      popup.alert("Oops","The server is taking too long to respond, please try again.")
+      popup.alert('Oops','The server is taking too long to respond, please try again.');
 
     });
   };
