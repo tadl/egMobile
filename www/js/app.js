@@ -659,6 +659,14 @@ app.directive('errSrc', function() {
                     attrs.$set('src', attrs.errSrc);
                 }
             });
+            element.bind('load', function() {
+                var image = new Image();
+                image.src = attrs.src
+                var w = image.width;
+                if (w == 1) {
+                    attrs.$set('src', attrs.errSrc);
+                }
+            });
         }
     }
 });
