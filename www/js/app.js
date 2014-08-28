@@ -353,7 +353,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                 });
                 var renewresponse = "";
                 if (data.confirmation != null) { renewresponse += data.confirmation + '<br/>'; }
-                if (data.errors.length >= 1) { 
+                if (data.errors.length >= 1) {
                     var errcount = 0;
                     jQuery.each(data.errors, function() {
                         errcount++;
@@ -392,23 +392,22 @@ app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $location
 });
 
 //Location Controller
-app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading){
-  $scope.get_locations = function(){
-    $rootScope.show_loading();
-    $http({
-      method: 'GET',
-      url: 'http://ilscatcher2.herokuapp.com/web/locations',
-      timeout: 15000,
-    }).success(function(data) {
-      $scope.locations = data.locations
-      $rootScope.hide_loading();
-    }).error(function(){
-      alert("server taking to long to respond")
-      $rootScope.hide_loading();
-    });
-  };
-
-  $scope.get_locations();
+app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading) {
+    $scope.get_locations = function() {
+        $rootScope.show_loading();
+        $http({
+            method: 'GET',
+            url: 'http://ilscatcher2.herokuapp.com/web/locations',
+            timeout: 15000,
+        }).success(function(data) {
+            $scope.locations = data.locations
+            $rootScope.hide_loading();
+        }).error(function(){
+            alert("server taking to long to respond")
+            $rootScope.hide_loading();
+        });
+    };
+    $scope.get_locations();
 });
 
 
@@ -599,43 +598,42 @@ app.factory('popup', function($rootScope, $ionicPopup, $timeout) {
 });
 
 /* hold factory */
-app.factory('hold', function($http, $rootScope, login, popup){
-  return {
-    place: function(record_ids){
-      var record_ids = record_ids
-      if ($rootScope.logged_in == false){
-        alert("login to place hold")
-      }else{
-        $rootScope.show_loading('Placing hold...');
-        var token = localStorage.getItem('token')
-        $http({
-        method: 'GET',
-        url: 'http://ilscatcher2.herokuapp.com/account/place_holds',
-        params: {"record_ids": record_ids, "token": token},
-        timeout: 15000,
-      }).success(function(data) {
-      $rootScope.hide_loading();
-        if (data.message != 'Invalid token'){
-          //alert(data.confirmation_messages[0].message)
-          popup.alert('Hold Response',data.confirmation_messages[0].message);
-          if(data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ){
-            var hold_button = document.getElementById('hold_' + record_ids)
-            hold_button.innerHTML = "On Hold";
-            hold_button.disabled = true;
-            login.login();
-          }
-        }else{
-          popup.alert("Oops","Your login session has expired, please log in again.")
-          login.login();
-          $rootScope.show_account();
+app.factory('hold', function($http, $rootScope, login, popup) {
+    return {
+        place: function(record_ids) {
+            var record_ids = record_ids
+            if ($rootScope.logged_in == false) {
+                alert("login to place hold")
+            } else {
+                $rootScope.show_loading('Placing hold...');
+                var token = localStorage.getItem('token')
+                $http({
+                    method: 'GET',
+                    url: 'http://ilscatcher2.herokuapp.com/account/place_holds',
+                    params: {"record_ids": record_ids, "token": token},
+                    timeout: 15000,
+                }).success(function(data) {
+                    $rootScope.hide_loading();
+                    if (data.message != 'Invalid token') {
+                        popup.alert('Hold Response',data.confirmation_messages[0].message);
+                        if(data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ) {
+                            var hold_button = document.getElementById('hold_' + record_ids)
+                            hold_button.innerHTML = "On Hold";
+                            hold_button.disabled = true;
+                            login.login();
+                        }
+                    } else {
+                        popup.alert("Oops","Your login session has expired, please log in again.")
+                        login.login();
+                        $rootScope.show_account();
+                    }
+                }).error(function(){
+                    $rootScope.hide_loading();
+                    popup.alert('Sorry','server taking to long to respond')
+                });
+            }
         }
-      }).error(function(){
-        $rootScope.hide_loading();
-        popup.alert('Sorry','server taking to long to respond')
-      });
     }
-    }
-  }
 });
 
 //NgEnter Directive
@@ -651,6 +649,7 @@ app.directive('ngEnter', function () {
         });
     };
 });
+
 app.directive('errSrc', function() {
     return {
         link: function(scope, element, attrs) {
@@ -670,4 +669,3 @@ app.directive('errSrc', function() {
         }
     }
 });
-
