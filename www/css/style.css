@@ -1,11 +1,10 @@
 /* Empty. Add your own CSS if you like */
 
 .cover_search_results {
-    width: 20%;
+    width: 100%;
     max-width: 200px;
-    min-width: 100px;
     float: left;
-    margin: 10px;
+    margin: 0 10px 0 0;
 }
 
 .big_loading {
