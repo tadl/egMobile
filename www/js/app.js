@@ -60,47 +60,47 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
 
   .state('main.search', {
     url: 'search?query&format&sort&availability&loc&qtype',
-    templateUrl: '/template/search.html',
+    templateUrl: 'template/search.html',
     controller: 'SearchCtrl',
   })
 
   .state('main.holds', {
     url: 'holds',
-    templateUrl: "/template/holds.html",
+    templateUrl: 'template/holds.html',
     controller: 'HoldsCtrl',
   })
 
   .state('main.checkouts', {
     url: 'checkouts',
-    templateUrl: '/template/checkouts.html',
+    templateUrl: 'template/checkouts.html',
     controller: 'CheckoutCtrl',
   })
 
   .state('main.card',{
     url: 'card',
-    templateUrl: '/template/card.html',
+    templateUrl: 'template/card.html',
     controller: 'CardCtrl',
   })
 
   .state('main.locations',{
     url: 'locations',
-    templateUrl: '/template/locations.html',
+    templateUrl: 'template/locations.html',
     controller: 'LocationCtrl',
   })
 
   .state('main.events',{
     url: 'events',
-    templateUrl: '/template/events.html',
+    templateUrl: 'template/events.html',
     controller: 'EventsCtrl',
   })
 
   .state('main.news',{
     url: 'news',
-    templateUrl: '/template/news.html',
+    templateUrl: 'template/news.html',
     controller: 'NewsCtrl',
   })
 
-  $urlRouterProvider.otherwise("/search");
+  $urlRouterProvider.otherwise('/search');
 
   fitTextConfigProvider.config = {
       debounce: false,
@@ -213,7 +213,7 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
     localStorage.clear();
     $rootScope.logged_in = false
     $rootScope.user_basic = {}
-    $location.path( "/home" );
+    $location.path( '/home' );
   }
 
   if (localStorage['token'] != null){
@@ -235,7 +235,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
       $scope.holds = data.holds
       $rootScope.hide_loading();
     }).error(function(){
-      popup.alert("Oops","The server is taking too long to respond, please try again.")
+      popup.alert('Oops','The server is taking too long to respond, please try again.')
       $rootScope.hide_loading();
     });
   };
@@ -507,7 +507,7 @@ app.factory('node_details', function($http, $ionicModal, $rootScope) {
     return {
         show: function(nid, $scope) {
             $scope = $scope || $rootScope.$new();
-            $ionicModal.fromTemplateUrl('/template/node_modal.html', function(modal) {
+            $ionicModal.fromTemplateUrl('template/node_modal.html', function(modal) {
                 $scope.modal = modal;
             },
             {
@@ -543,7 +543,7 @@ app.factory('item_details', function($http, $ionicModal, $rootScope) {
     return {
         show: function(record_id, $scope) {
             $scope = $scope || $rootScope.$new();
-            $ionicModal.fromTemplateUrl('/template/item_modal.html', function(modal) {
+            $ionicModal.fromTemplateUrl('template/item_modal.html', function(modal) {
                 $scope.modal = modal;
             },
             {
