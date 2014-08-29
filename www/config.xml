@@ -27,6 +27,8 @@
     <preference name="auto-hide-splash-screen" value="true" />
     <preference name="disable-cursor" value="false" />
 
-    <access origin="*"/>
+    <access origin="*" />
+
+    <content src="index.html" />
 
 </widget>
