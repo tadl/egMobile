@@ -1,5 +1,10 @@
 /* Empty. Add your own CSS if you like */
 
+body {
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+}
+
 .cover_search_results {
     width: 100%;
     max-width: 200px;
