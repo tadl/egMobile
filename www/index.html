@@ -32,7 +32,7 @@
 
 
           <ion-content>
-          <ui-view name='main'/>
+          <ui-view name="main" class="make_fast" />
             
           </ion-content>
         
@@ -40,23 +40,23 @@
   
         <!-- Left menu -->
       </ion-side-menu-content>
-        <ion-side-menu side="left">
+        <ion-side-menu side="left" class="make_fast">
           <ion-header-bar class="bar-stable">
             <h1 class="title">Menu</h1>
           </ion-header-bar>
             <ion-content>
-              <div ui-view name="menu">
+              <div ui-view name="menu" class="make_fast">
               </div>
           </ion-content>
         </ion-side-menu>
 
               <!-- right menu -->
-        <ion-side-menu side="right">
+        <ion-side-menu side="right" class="make_fast">
           <ion-header-bar class="bar-stable">
             <h1 class="title">Account</h1>
           </ion-header-bar>
           <ion-content>
-              <div ui-view name="account">
+              <div ui-view name="account" class="make_fast">
               </div>
            </ion-content>
         </ion-side-menu>
