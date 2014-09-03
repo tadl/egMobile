@@ -30,7 +30,9 @@
     <access origin="*" />
 
     <content src="index.html" />
-    
+
+    <!-- ICONS -->
+
     <!-- iPhone / iPod Touch -->
     <icon src="res/icons/ios/Icon.png" gap:platform="ios" width="57" height="57" />
     <icon src="res/icons/ios/Icon@2x.png" gap:platform="ios" width="114" height="114" />
@@ -47,10 +49,37 @@
     <icon src="res/icons/ios/Icon-50.png" gap:platform="ios" width="50" height="50" />
     <icon src="res/icons/ios/Icon-50@2x.png" gap:platform="ios" width="100" height="100" />
 
-    <!-- Android Icons -->
+    <!-- Android -->
     <icon src="res/icons/android/ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
     <icon src="res/icons/android/mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
     <icon src="res/icons/android/hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
     <icon src="res/icons/android/xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
+
+
+    <!-- SPLASH -->
+
+    <!-- Default -->
+    <gap:splash src="res/splash/default.png" />
+
+    <!-- iPhone and iPod touch -->
+    <gap:splash src="res/splash/ios/Default.png" gap:platform="ios" width="320" height="480" />
+    <gap:splash src="res/splash/ios/Default@2x.png" gap:platform="ios" width="640" height="960" />
+
+    <!-- iPhone 5 / iPod Touch (5th Generation) -->
+    <gap:splash src="res/splash/ios/Default-568h@2x.png" gap:platform="ios" width="640" height="1136" />
+
+    <!-- iPad -->
+    <gap:splash src="res/splash/ios/Default-Portrait.png" gap:platform="ios" width="768" height="1024" />
+    <gap:splash src="res/splash/ios/Default-Landscape.png" gap:platform="ios" width="1024" height="768" />
+
+    <!-- Retina iPad -->
+    <gap:splash src="res/splash/ios/Default-Portrait@2x.png" gap:platform="ios" width="1536" height="2048" />
+    <gap:splash src="res/splash/ios/Default-Landscape@2x.png" gap:platform="ios" width="2048" height="1536" />
+
+    <!-- Android -->
+    <gap:splash src="res/splash/android/ldpi.png" gap:platform="android" gap:qualifier="ldpi" />
+    <gap:splash src="res/splash/android/mdpi.png" gap:platform="android" gap:qualifier="mdpi" />
+    <gap:splash src="res/splash/android/hdpi.png" gap:platform="android" gap:qualifier="hdpi" />
+    <gap:splash src="res/splash/android/xhdpi.png" gap:platform="android" gap:qualifier="xhdpi" />
 
 </widget>
