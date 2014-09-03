@@ -111,7 +111,7 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
 
 //Search Controller
 app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, popup, hold, item_details){
-  $scope.advance_search = false
+  $scope.advance_search = false;
 
   $scope.search = function(more){
     if(more != 'true'){
@@ -135,7 +135,6 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
 
     search_params['page'] = $scope.page
 
-
     $http({
       method: 'GET',
       url: 'http://ilscatcher2.herokuapp.com/search/basic',
@@ -158,15 +157,14 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
     }).error(function() {
       $rootScope.hide_loading();
       popup.alert('Oops','The server is taking too long to respond, please try again.');
-
     });
   };
 
-  $scope.item_details = function(record_id){
+  $scope.item_details = function(record_id) {
     item_details.show(record_id);
   };
 
-  $scope.showAlert = function(title,message){
+  $scope.showAlert = function(title,message) {
       popup.alert(title,message);
   };
 
@@ -174,30 +172,30 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
       $scope.query = "";
   }
 
-  $scope.toggle_advanced = function(){
-    if($scope.advance_search == false){
-      $scope.advance_search = true
-    }else{
-      $scope.advance_search = false
+  $scope.toggle_advanced = function() {
+    if($scope.advance_search == false) {
+      $scope.advance_search = true;
+    } else {
+      $scope.advance_search = false;
     }
   }
 
-  $scope.place_hold = function(record_id){
+  $scope.place_hold = function(record_id) {
     hold.place(record_id);
   }
 
   $scope.query = $stateParams.query;
-  $scope.format = $stateParams.format;
-  $scope.sort = $stateParams.sort;
-  $scope.availability = $stateParams.availability;
-  $scope.loc = $stateParams.loc
-  $scope.qtype = $stateParams.qtype
+  $scope.format = $stateParams.format || 'all';
+  $scope.sort = $stateParams.sort || 'relevance';
+  $scope.availability = $stateParams.availability || 'off';
+  $scope.loc = $stateParams.loc || '22';
+  $scope.qtype = $stateParams.qtype || 'keyword';
 
-  if($scope.format != 'all' || $scope.sort != 'relevance' || $scope.loc != '22' || $scope.availability != 'off' || $scope.qtype != 'keyword' ){
+  if (($scope.format != 'all') || ($scope.sort != 'relevance') || ($scope.loc != '22') || ($scope.availability != 'off') || ($scope.qtype != 'keyword')) {
     $scope.advance_search = true
   }
 
-  if($scope.query != null || $scope.current_search != $scope.query ){
+  if (($scope.query != null) || ($scope.current_search != $scope.query)) {
     $scope.search();
   }
 });
