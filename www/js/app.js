@@ -8,17 +8,20 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
     });
 })
 
-.run(function($ionicPlatform, $ionicPopup) {
-    $ionicPlatform.onHardwareBackButton(function() {
-        if (true) {
-            $ionicPopup.confirm({
-                title: 'Confirmation',
+.run(function($ionicPlatform, $ionicPopup, $rootScope) {
+    $ionicPlatform.registerBackButtonAction(function(e) {
+        if ($rootScope.$viewHistory.backView) {
+            $rootScope.$viewHistory.backView.go();
+        } else {
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'Confirm Exit',
                 template: 'Are you sure exit?'
-            }).then(function(res) {
-                if (res) {
-                    navigator.app.exitApp();
+            });
+            confirmPopup.then(function(close) {
+                if (close) {
+                    ionic.Platform.exitApp();
                 }
-            })
+            });
         }
     })
 })
