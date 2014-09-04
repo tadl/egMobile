@@ -64,6 +64,12 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
     controller: 'SearchCtrl',
   })
 
+  .state('main.home', {
+    url: 'home',
+    templateUrl: 'template/home.html',
+    controller: 'HomeCtrl',
+  })
+
   .state('main.holds', {
     url: 'holds',
     templateUrl: 'template/holds.html',
@@ -100,7 +106,7 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
     controller: 'NewsCtrl',
   })
 
-  $urlRouterProvider.otherwise('/search');
+  $urlRouterProvider.otherwise('/home');
 
   fitTextConfigProvider.config = {
       debounce: false,
@@ -198,6 +204,9 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
   if (($scope.query != null) || ($scope.current_search != $scope.query)) {
     $scope.search();
   }
+});
+
+app.controller('HomeCtrl', function($scope, $rootScope, $ionicLoading) {
 });
 
 //Account Controller
