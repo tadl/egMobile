@@ -10,6 +10,9 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
+    document.addEventListener("backbutton", function() {
+        window.history.go(-1);
+    });
   });
 })
 
