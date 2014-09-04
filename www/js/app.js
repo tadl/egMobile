@@ -1,21 +1,16 @@
 var app = angular.module('egmobile', ['ionic','ngFitText'])
 
 .run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-/*    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    } */
-    if(window.StatusBar) {
-      StatusBar.styleDefault();
-    }
-    document.addEventListener("backbutton", function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        window.history.go(-1);
+    $ionicPlatform.ready(function() {
+        if(window.StatusBar) {
+            StatusBar.styleDefault();
+        }
+        document.addEventListener("backbutton", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.history.go(-1);
+        }, false);
     });
-  });
 })
 
 //Set gloabl variables and functions
