@@ -8,22 +8,16 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
     });
 })
 
-.run(function($ionicPlatform, $ionicPopup, $rootScope) {
+.run(function($ionicPlatform, $state) {
     $ionicPlatform.registerBackButtonAction(function(e) {
-        if ($rootScope.$viewHistory.backView) {
-            $rootScope.$viewHistory.backView.go();
+        if ($state.is('main.home')) {
+            ionic.Platform.exitApp();
         } else {
-            var confirmPopup = $ionicPopup.confirm({
-                title: 'Confirm Exit',
-                template: 'Are you sure exit?'
-            });
-            confirmPopup.then(function(close) {
-                if (close) {
-                    ionic.Platform.exitApp();
-                }
-            });
+            navigator.app.backHistory();
         }
-    })
+        e.preventDefault();
+        return false;
+    }, 101)
 })
 
 //Set gloabl variables and functions
