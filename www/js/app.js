@@ -191,11 +191,11 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
   }
 
   $scope.query = $stateParams.query;
-  $scope.format = $stateParams.format || 'all';
-  $scope.sort = $stateParams.sort || 'relevance';
-  $scope.availability = $stateParams.availability || 'off';
-  $scope.loc = $stateParams.loc || '22';
-  $scope.qtype = $stateParams.qtype || 'keyword';
+  $scope.format = $stateParams.format;
+  $scope.sort = $stateParams.sort;
+  $scope.availability = $stateParams.availability;
+  $scope.loc = $stateParams.loc;
+  $scope.qtype = $stateParams.qtype;
 
   if (($scope.format != 'all') || ($scope.sort != 'relevance') || ($scope.loc != '22') || ($scope.availability != 'off') || ($scope.qtype != 'keyword')) {
     $scope.advance_search = true
