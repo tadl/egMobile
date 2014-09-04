@@ -5,12 +5,14 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
         if(window.StatusBar) {
             StatusBar.styleDefault();
         }
-        document.addEventListener("backbutton", function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            window.history.go(-1);
-        }, false);
     });
+    $ionicPlatform.registerBackButtonAction(function (event) {
+        if ($state.current.name=="app.main") {
+            navigator.app.exitApp();
+        } else {
+            navigator.app.backHistory();
+        }
+    }, 100);
 })
 
 //Set gloabl variables and functions
