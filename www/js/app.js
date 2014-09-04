@@ -6,13 +6,21 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
             StatusBar.styleDefault();
         }
     });
-    $ionicPlatform.registerBackButtonAction(function (event) {
-        if ($state.current.name=="app.main") {
-            navigator.app.exitApp();
-        } else {
-            navigator.app.backHistory();
+})
+
+.run(function($ionicPlatform, $ionicPopup) {
+    $ionicPlatform.onHardwareBackButton(function() {
+        if (true) {
+            $ionicPopup.confirm({
+                title: 'Confirmation',
+                template: 'Are you sure exit?'
+            }).then(function(res) {
+                if (res) {
+                    navigator.app.exitApp();
+                }
+            })
         }
-    }, 100);
+    })
 })
 
 //Set gloabl variables and functions
