@@ -15,14 +15,15 @@
                     <img ng-src="{{details.image}}" err-src="img/clocktower100.png" class="cover_item_details" />
                 </div>
                 <div class="col col-75">
-                    <span class="detail_key">Author(s) / Group: </span>
-                    <span class="detail_value">{{details.author}}</span>
+                    <span class="detail_key">{{details.author}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-100">
                     <div ng-show="details.summary != null">
-                        <span class="detail_key">Summary: </span>
                         <span class="detail_value">{{details.summary}}</span>
                     </div>
                     <div ng-show="details.contents != null">
-                        <span class="detail_key">Contents: </span>
                         <span class="detail_value">{{details.contents}}</span>
                     </div>
                 </div>
