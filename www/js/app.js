@@ -1,3 +1,17 @@
+// Set up all URLs as vars
+var ilsSearchBasic = 'https://ilscatcher2.herokuapp.com/search/basic';
+var ilsAccountHolds = 'https://ilscatcher2.herokuapp.com/account/holds';
+var ilsAccountCheckouts = 'https://ilscatcher2.herokuapp.com/account/checkouts';
+var ilsAccountRenew = 'https://ilscatcher2.herokuapp.com/account/renew_items';
+var webLocations = 'https://ilscatcher2.herokuapp.com/web/locations';
+var webEvents = 'https://ilscatcher2.herokuapp.com/web/events';
+var webNews = 'https://ilscatcher2.herokuapp.com/web/news';
+var ilsAccountLogin = 'https://ilscatcher2.herokuapp.com/account/login';
+var ilsAccountToken = 'https://ilscatcher2.herokuapp.com/account/check_token';
+var webNode = 'https://www.tadl.org/export/node/json/';
+var ilsItemDetails = 'https://ilscatcher2.herokuapp.com/items/details';
+var ilsAccountHoldsPlace = 'https://ilscatcher2.herokuapp.com/account/place_holds';
+
 var app = angular.module('egmobile', ['ionic','ngFitText'])
 
 .run(function($ionicPlatform) {
@@ -150,7 +164,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
 
     $http({
       method: 'GET',
-      url: 'http://ilscatcher2.herokuapp.com/search/basic',
+      url: ilsSearchBasic,
       timeout: 15000,
       params: search_params
     }).success(function(data) {
@@ -242,7 +256,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
     $rootScope.show_loading('Loading holds...');
     $http({
       method: 'GET',
-      url: 'http://ilscatcher2.herokuapp.com/account/holds',
+      url: ilsAccountHolds,
       params: {"token": token},
       timeout: 15000,
     }).success(function(data) {
@@ -260,7 +274,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
     $rootScope.show_loading();
     $http({
       method: 'GET',
-      url: 'http://ilscatcher2.herokuapp.com/account/holds',
+      url: ilsAccountHolds,
       params: {"token": token, "task": task, "hold_id": hold_id},
       timeout: 15000,
     }).success(function(data) {
@@ -289,7 +303,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
         $rootScope.show_loading('Loading checkouts...');
         $http({
             method: 'GET',
-            url: 'http://ilscatcher2.herokuapp.com/account/checkouts',
+            url: ilsAccountCheckouts,
             params: {"token": token},
             timeout: 15000,
         }).success(function(data) {
@@ -347,7 +361,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
         var token = localStorage.getItem('token')
         $http({
             method: 'GET',
-            url: 'http://ilscatcher2.herokuapp.com/account/renew_items',
+            url: ilsAccountRenew,
             params: {"token": token, "circ_ids": checkout_id},
             timeout: 15000,
         }).success(function(data) {
@@ -413,7 +427,7 @@ app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading
         $rootScope.show_loading();
         $http({
             method: 'GET',
-            url: 'http://ilscatcher2.herokuapp.com/web/locations',
+            url: webLocations,
             timeout: 15000,
         }).success(function(data) {
             $scope.locations = data.locations
@@ -433,7 +447,7 @@ app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, 
         $rootScope.show_loading();
         $http({
             method: 'GET',
-            url: 'http://ilscatcher2.herokuapp.com/web/events',
+            url: webEvents,
             timeout: 15000,
         }).success(function(data) {
             $scope.events = data.events
@@ -455,7 +469,7 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
         $rootScope.show_loading();
         $http({
             method: 'GET',
-            url: 'http://ilscatcher2.herokuapp.com/web/news',
+            url: webNews,
             timeout: 15000,
         }).success(function(data) {
             $scope.news = data.news
@@ -480,10 +494,10 @@ app.factory('login', function($http, $rootScope, popup){
 
       if (localStorage['token'] != null){
         var token = localStorage.getItem('token'),
-        login_url = 'http://ilscatcher2.herokuapp.com/account/check_token',
+        login_url = ilsAccountToken,
         login_params = {"token": token}
     }else{
-      login_url = 'http://ilscatcher2.herokuapp.com/account/login',
+      login_url = ilsAccountLogin,
       login_params = {"username": username, "password": password}
       $rootScope.show_loading();
     }
@@ -540,7 +554,7 @@ app.factory('node_details', function($http, $ionicModal, $rootScope) {
             $rootScope.show_loading('Loading details...');
             $http({
                 method: 'GET',
-                url: 'https://www.tadl.org/export/node/json/' + nid,
+                url: webNode + nid,
                 timeout: 15000,
             }).success(function(data) {
                 var nodebody = jQuery('<div>' + data.nodes[0].node.body + '</div>').text();
@@ -579,7 +593,7 @@ app.factory('item_details', function($http, $ionicModal, $rootScope) {
             $rootScope.show_loading('Loading details...');
             $http({
                 method: 'GET',
-                url: 'http://ilscatcher2.herokuapp.com/items/details',
+                url: ilsItemDetails,
                 params: {"record": record_id},
                 timeout: 15000,
             }).success(function(data) {
@@ -631,7 +645,7 @@ app.factory('hold', function($http, $rootScope, login, popup) {
                 var token = localStorage.getItem('token')
                 $http({
                     method: 'GET',
-                    url: 'http://ilscatcher2.herokuapp.com/account/place_holds',
+                    url: ilsAccountHoldsPlace,
                     params: {"record_ids": record_ids, "token": token},
                     timeout: 15000,
                 }).success(function(data) {
