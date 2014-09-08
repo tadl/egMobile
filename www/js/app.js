@@ -168,6 +168,12 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
       timeout: 15000,
       params: search_params
     }).success(function(data) {
+        jQuery.each(data.results, function() {
+            if (this.availability.length) {
+                var tmpavail = this.availability.pop();
+                this.availability = tmpavail;
+            }
+        });
       $scope.page = data.page
       $scope.more_results = data.more_results;
       $scope.new_results = data.results
