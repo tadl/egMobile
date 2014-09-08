@@ -20,6 +20,10 @@
             </div>
             <div class="row">
                 <div class="col col-100">
+                    <div ng-show="copies.length">
+                        <span class="detail_key">Call Number: </span>
+                        <span class="detail_value">{{copies.0.call_number}}</span>
+                    </div>
                     <div ng-show="details.summary != null">
                         <span class="detail_value">{{details.summary}}</span>
                     </div>
