@@ -68,14 +68,16 @@
                 <img class="cover_search_results" ng-src="https://catalog.tadl.org/opac/extras/ac/jacket/large/r/{{result.record_id}}" err-src="img/clocktower100.png" />
             </div>
             <div class="col col-66">
-                <h2 ng-show="result.abstract != null">Abstract</h2>
-                <p ng-show="result.abstract != null">{{result.abstract}}</p>
-                <h2 ng-show="result.contents != null">Contents</h2>
-                <p ng-show="result.contents != null">{{result.contents}}</p>
                 <div ng-show="result.availability.length" ng-repeat="scope in result.availability">{{scope}}</div>
                 <div class="padtop" ng-show="result.call_number">
                     <strong>{{result.call_number}}</strong>
                 </div>
+            </div>
+        </div>
+        <div class="item item-text-wrap row" ng-show="result.abstract || result.contents">
+            <div class="col col-100">
+                <p ng-show="result.abstract">{{result.abstract}}</p>
+                <p ng-show="result.contents">{{result.contents}}</p>
             </div>
         </div>
         <div class="item">
