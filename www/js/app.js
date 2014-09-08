@@ -169,7 +169,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
       $scope.$broadcast('scroll.infiniteScrollComplete');
     }).error(function() {
       $rootScope.hide_loading();
-      popup.alert('Oops','The server is taking too long to respond, please try again.');
+      popup.alert('Oops','An error has occurred, please try again.');
     });
   };
 
@@ -249,7 +249,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
       $scope.holds = data.holds
       $rootScope.hide_loading();
     }).error(function(){
-      popup.alert('Oops','The server is taking too long to respond, please try again.')
+      popup.alert('Oops','An error has occurred, please try again.')
       $rootScope.hide_loading();
     });
   };
@@ -268,7 +268,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
       $rootScope.user_basic['holds'] = data.count
       $rootScope.hide_loading();
     }).error(function(){
-      popup.alert("Oops","The server is taking too long to respond, please try again.")
+      popup.alert('Oops','An error has occurred, please try again.')
       $rootScope.hide_loading();
     });
   }
@@ -333,7 +333,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
             $scope.checkouts = data.checkouts
             $rootScope.hide_loading();
         }).error(function() {
-            popup.alert("Oops","The server is taking too long to respond, please try again.")
+            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
         });
     };
@@ -381,7 +381,10 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                 login.login();
                 $rootScope.show_account();
             }
-        })
+        }).error(function() {
+            popup.alert('Oops','An error has occurred, please try again.')
+            $rootScope.hide_loading();
+        });
     };
     $scope.checkouts();
 });
@@ -405,7 +408,7 @@ app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $location
 });
 
 //Location Controller
-app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading) {
+app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading, popup) {
     $scope.get_locations = function() {
         $rootScope.show_loading();
         $http({
@@ -416,7 +419,7 @@ app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading
             $scope.locations = data.locations
             $rootScope.hide_loading();
         }).error(function(){
-            alert("server taking to long to respond")
+            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
         });
     };
@@ -436,7 +439,7 @@ app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, 
             $scope.events = data.events
             $rootScope.hide_loading();
         }).error(function() {
-            popup.alert('Error','Server taking to long to respond')
+            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
         });
     };
@@ -458,7 +461,7 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
             $scope.news = data.news
             $rootScope.hide_loading();
         }).error(function() {
-            popup.alert('Error','server taking to long to respond')
+            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
         });
     };
@@ -508,7 +511,7 @@ app.factory('login', function($http, $rootScope, popup){
         $rootScope.logged_in = true
       }
     }).error(function(){
-      alert("server taking to long to respond")
+      popup.alert('Oops','An error has occurred, please try again.')
       $rootScope.hide_loading();
     });
 
@@ -547,7 +550,10 @@ app.factory('node_details', function($http, $ionicModal, $rootScope) {
                 $scope.node.nodetitle = nodetitle;
                 $scope.openModal();
                 $rootScope.hide_loading();
-            })
+            }).error(function(){
+              popup.alert('Oops','An error has occurred, please try again.')
+              $rootScope.hide_loading();
+            });
         }
     }
 });
@@ -587,7 +593,10 @@ app.factory('item_details', function($http, $ionicModal, $rootScope) {
                 }
                 $scope.locations = jQuery.unique(locations)
                 $rootScope.hide_loading();
-            })
+            }).error(function(){
+              popup.alert('Oops','An error has occurred, please try again.')
+              $rootScope.hide_loading();
+            });
         }
     }
 });
@@ -616,7 +625,7 @@ app.factory('hold', function($http, $rootScope, login, popup) {
         place: function(record_ids) {
             var record_ids = record_ids
             if ($rootScope.logged_in == false) {
-                alert("login to place hold")
+                popup.alert('Authorization required','Please log in to place holds.')
             } else {
                 $rootScope.show_loading('Placing hold...');
                 var token = localStorage.getItem('token')
@@ -636,13 +645,13 @@ app.factory('hold', function($http, $rootScope, login, popup) {
                             login.login();
                         }
                     } else {
-                        popup.alert("Oops","Your login session has expired, please log in again.")
+                        popup.alert('Oops','Your login session has expired, please log in again.')
                         login.login();
                         $rootScope.show_account();
                     }
                 }).error(function(){
                     $rootScope.hide_loading();
-                    popup.alert('Sorry','server taking to long to respond')
+                    popup.alert('Oops','An error has occurred, please try again.')
                 });
             }
         }
