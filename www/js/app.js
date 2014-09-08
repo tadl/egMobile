@@ -421,14 +421,14 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
 });
 
 //Card Controller
-app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $location, login) {
+app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $timeout, $location, login) {
     $scope.show_card = function() {
         if(localStorage.getItem('card')) {
             var card = localStorage.getItem('card')
             $("#barcode").JsBarcode(card, { format:'CODE128', displayValue:true, fontSize:16, width: 2 });
         } else {
             if($rootScope.logged_in == true) {
-                setTimeout(function() { $scope.show_card() }, 1500);
+                $timeout(function() { $scope.show_card() }, 1500);
             } else {
                 $location.path('/home');
                 $rootScope.show_account();
