@@ -205,6 +205,14 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
       $scope.query = "";
   }
 
+  $scope.openLink = function(link) {
+      try {
+          window.open(link, '_system', 'location=no,toolbar=yes');
+      } catch (err) {
+          popup.alert('Oops','Unable to open that link. Please try again.');
+      }
+  }
+
   $scope.toggle_advanced = function() {
     if($scope.advance_search == false) {
       $scope.advance_search = true;
