@@ -137,7 +137,7 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
 })
 
 //Search Controller
-app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, popup, hold, item_details){
+app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, $timeout, popup, hold, item_details){
   $scope.advance_search = false;
 
   $scope.search = function(more){
@@ -203,6 +203,9 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
 
   $scope.resetSearch = function() {
       $scope.query = "";
+      $timeout(function() {
+          $('#searchBox').focus();
+      }, 0);
   }
 
   $scope.openLink = function(link) {
