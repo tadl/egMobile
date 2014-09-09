@@ -34,286 +34,280 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
     }, 101)
 })
 
-//Set gloabl variables and functions
+// Set gloabl variables and functions
 .run(function($rootScope, $ionicSideMenuDelegate, $ionicLoading, $ionicScrollDelegate) {
-  $rootScope.logged_in = ""
-  $rootScope.user_basic = ""
-  $rootScope.show_loading = function(custom){
-      var loadingtext = custom || 'Loading...';
-    $ionicLoading.show({
-      template: '<i class="icon ion-loading-d big_loading"></i> <span class="loading_text">' + loadingtext + '</span>'
-    });
-  }
-
-  $rootScope.hide_loading = function(){
-    $ionicLoading.hide();
-  }
-
-  $rootScope.show_account = function(){
-    $ionicSideMenuDelegate.toggleRight(true);
-  }
-
-  $rootScope.$on('$viewContentLoaded', function(){
-    $ionicScrollDelegate.scrollTop();
-  });
-
-})
-
-//Create routes
-.config(function($stateProvider, $urlRouterProvider, fitTextConfigProvider) {
-  $stateProvider
-
-  .state('main', {
-    url: '/',
-    views: {
-      'account@': {
-        templateUrl: 'template/account.html',
-        controller: 'AccountCtrl',
-      },
-      'main@':{
-        template: '<ui-view/>'
-      },
-      'menu@':{
-        templateUrl: 'template/menu.html'
-      }
-    }
-  })
-
-  .state('main.search', {
-    url: 'search?query&format&sort&availability&loc&qtype',
-    templateUrl: 'template/search.html',
-    controller: 'SearchCtrl',
-  })
-
-  .state('main.home', {
-    url: 'home',
-    templateUrl: 'template/home.html',
-    controller: 'HomeCtrl',
-  })
-
-  .state('main.holds', {
-    url: 'holds',
-    templateUrl: 'template/holds.html',
-    controller: 'HoldsCtrl',
-  })
-
-  .state('main.checkouts', {
-    url: 'checkouts',
-    templateUrl: 'template/checkouts.html',
-    controller: 'CheckoutCtrl',
-  })
-
-  .state('main.card',{
-    url: 'card',
-    templateUrl: 'template/card.html',
-    controller: 'CardCtrl',
-  })
-
-  .state('main.locations',{
-    url: 'locations',
-    templateUrl: 'template/locations.html',
-    controller: 'LocationCtrl',
-  })
-
-  .state('main.events',{
-    url: 'events',
-    templateUrl: 'template/events.html',
-    controller: 'EventsCtrl',
-  })
-
-  .state('main.news',{
-    url: 'news',
-    templateUrl: 'template/news.html',
-    controller: 'NewsCtrl',
-  })
-
-  $urlRouterProvider.otherwise('/home');
-
-  fitTextConfigProvider.config = {
-      debounce: false,
-      delay: 1000
-  };
-
-})
-
-//Search Controller
-app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, $timeout, popup, hold, item_details){
-  $scope.advance_search = false;
-
-  $scope.search = function(more){
-    if(more != 'true'){
-      $scope.page = 0;
-      $rootScope.show_loading('Searching...');
-    }
-
-    var search_params = {}
-    search_params['query'] = $scope.query
-    search_params['format'] = $scope.format
-    search_params['sort'] = $scope.sort
-    search_params['availability'] = $scope.availability
-    search_params['loc'] = $scope.loc
-    search_params['qtype'] = $scope.qtype
-
-    if ($stateParams.query != $scope.query || $stateParams.format != $scope.format || $stateParams.sort != $scope.sort || $stateParams.availability != $scope.availability || $stateParams.loc != $scope.loc || $stateParams.qtype != $scope.qtype){
-      $scope.current_search = $scope.query
-      $location.path('/search').search(search_params);
-      return
-    }
-
-    search_params['page'] = $scope.page
-
-    $http({
-      method: 'GET',
-      url: ilsSearchBasic,
-      timeout: 15000,
-      params: search_params
-    }).success(function(data) {
-        jQuery.each(data.results, function() {
-            if (this.availability.length) {
-                var tmpavail = this.availability.pop();
-                this.availability = tmpavail;
-            }
+    $rootScope.logged_in = ""
+    $rootScope.user_basic = ""
+    $rootScope.show_loading = function(custom){
+        var loadingtext = custom || 'Loading...';
+        $ionicLoading.show({
+            template: '<i class="icon ion-loading-d big_loading"></i> <span class="loading_text">' + loadingtext + '</span>'
         });
-      $scope.page = data.page
-      $scope.more_results = data.more_results;
-      $scope.new_results = data.results
-      if(more == 'true') {
-        $scope.results = $scope.results.concat($scope.new_results)
-        $scope.page = +$scope.page + 1
-
-      } else {
-        $scope.results = data.results;
-        $scope.page = +$scope.page + 1
-      }
-      $rootScope.hide_loading();
-      $scope.$broadcast('scroll.infiniteScrollComplete');
-    }).error(function() {
-      $rootScope.hide_loading();
-      popup.alert('Oops','An error has occurred, please try again.');
-    });
-  };
-
-  $scope.item_details = function(record_id) {
-    item_details.show(record_id);
-  };
-
-  $scope.showAlert = function(title,message) {
-      popup.alert(title,message);
-  };
-
-  $scope.resetSearch = function() {
-      $scope.query = "";
-      $timeout(function() {
-          $('#searchBox').focus();
-      }, 0);
-  }
-
-  $scope.openLink = function(link) {
-      try {
-          window.open(link, '_system', 'location=no,toolbar=yes');
-      } catch (err) {
-          popup.alert('Oops','Unable to open that link. Please try again.');
-      }
-  }
-
-  $scope.toggle_advanced = function() {
-    if($scope.advance_search == false) {
-      $scope.advance_search = true;
-    } else {
-      $scope.advance_search = false;
     }
-  }
 
-  $scope.place_hold = function(record_id) {
-    hold.place(record_id);
-  }
+    $rootScope.hide_loading = function(){
+        $ionicLoading.hide();
+    }
 
-  $scope.query = $stateParams.query;
-  $scope.format = $stateParams.format;
-  $scope.sort = $stateParams.sort;
-  $scope.availability = $stateParams.availability;
-  $scope.loc = $stateParams.loc;
-  $scope.qtype = $stateParams.qtype;
+    $rootScope.show_account = function(){
+        $ionicSideMenuDelegate.toggleRight(true);
+    }
 
-  if (($scope.format != 'all') || ($scope.sort != 'relevance') || ($scope.loc != '22') || ($scope.availability != 'off') || ($scope.qtype != 'keyword')) {
-    $scope.advance_search = true
-  }
+    $rootScope.$on('$viewContentLoaded', function(){
+        $ionicScrollDelegate.scrollTop();
+    });
+})
 
-  if (($scope.query != null) || ($scope.current_search != $scope.query)) {
-    $scope.search();
-  }
+// Create routes
+.config(function($stateProvider, $urlRouterProvider, fitTextConfigProvider) {
+    $stateProvider
+    .state('main', {
+        url: '/',
+        views: {
+            'account@': {
+                templateUrl: 'template/account.html',
+                controller: 'AccountCtrl',
+            },
+            'main@':{
+                template: '<ui-view/>'
+            },
+            'menu@':{
+                templateUrl: 'template/menu.html'
+            }
+        }
+    })
+
+    .state('main.search', {
+        url: 'search?query&format&sort&availability&loc&qtype',
+        templateUrl: 'template/search.html',
+        controller: 'SearchCtrl',
+    })
+
+    .state('main.home', {
+        url: 'home',
+        templateUrl: 'template/home.html',
+        controller: 'HomeCtrl',
+    })
+
+    .state('main.holds', {
+        url: 'holds',
+        templateUrl: 'template/holds.html',
+        controller: 'HoldsCtrl',
+    })
+
+    .state('main.checkouts', {
+        url: 'checkouts',
+        templateUrl: 'template/checkouts.html',
+        controller: 'CheckoutCtrl',
+    })
+
+    .state('main.card',{
+        url: 'card',
+        templateUrl: 'template/card.html',
+        controller: 'CardCtrl',
+    })
+
+    .state('main.locations',{
+        url: 'locations',
+        templateUrl: 'template/locations.html',
+        controller: 'LocationCtrl',
+    })
+
+    .state('main.events',{
+        url: 'events',
+        templateUrl: 'template/events.html',
+        controller: 'EventsCtrl',
+    })
+
+    .state('main.news',{
+        url: 'news',
+        templateUrl: 'template/news.html',
+        controller: 'NewsCtrl',
+    })
+
+    $urlRouterProvider.otherwise('/home');
+
+    // Just put that anywhere, Bill...
+    fitTextConfigProvider.config = {
+        debounce: false,
+        delay: 1000
+    };
+
+})
+
+// Search Controller
+app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, $timeout, popup, hold, item_details){
+    $scope.advance_search = false;
+    $scope.search = function(more){
+        if(more != 'true') {
+            $scope.page = 0;
+            $rootScope.show_loading('Searching...');
+        }
+
+        var search_params = {}
+        search_params['query'] = $scope.query
+        search_params['format'] = $scope.format
+        search_params['sort'] = $scope.sort
+        search_params['availability'] = $scope.availability
+        search_params['loc'] = $scope.loc
+        search_params['qtype'] = $scope.qtype
+
+        if ($stateParams.query != $scope.query || $stateParams.format != $scope.format || $stateParams.sort != $scope.sort || $stateParams.availability != $scope.availability || $stateParams.loc != $scope.loc || $stateParams.qtype != $scope.qtype) {
+            $scope.current_search = $scope.query
+            $location.path('/search').search(search_params);
+            return
+        }
+
+        search_params['page'] = $scope.page
+
+        $http({
+            method: 'GET',
+            url: ilsSearchBasic,
+            timeout: 15000,
+            params: search_params
+        }).success(function(data) {
+            jQuery.each(data.results, function() {
+                if (this.availability.length) {
+                    var tmpavail = this.availability.pop();
+                    this.availability = tmpavail;
+                }
+            });
+            $scope.page = data.page
+            $scope.more_results = data.more_results;
+            $scope.new_results = data.results
+            if (more == 'true') {
+                $scope.results = $scope.results.concat($scope.new_results)
+                $scope.page = +$scope.page + 1
+            } else {
+                $scope.results = data.results;
+                $scope.page = +$scope.page + 1
+            }
+            $rootScope.hide_loading();
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        }).error(function() {
+            $rootScope.hide_loading();
+            popup.alert('Oops','An error has occurred, please try again.');
+        });
+    };
+
+    $scope.item_details = function(record_id) {
+        item_details.show(record_id);
+    };
+
+    $scope.showAlert = function(title,message) {
+        popup.alert(title,message);
+    };
+
+    $scope.resetSearch = function() {
+        $scope.query = "";
+        $timeout(function() {
+            $('#searchBox').focus();
+        }, 0);
+    }
+
+    $scope.openLink = function(link) {
+        try {
+            window.open(link, '_system', 'location=no,toolbar=yes');
+        } catch (err) {
+            popup.alert('Oops','Unable to open that link. Please try again.');
+        }
+    }
+
+    $scope.toggle_advanced = function() {
+        if($scope.advance_search == false) {
+            $scope.advance_search = true;
+        } else {
+            $scope.advance_search = false;
+        }
+    }
+
+    $scope.place_hold = function(record_id) {
+        hold.place(record_id);
+    }
+
+    $scope.query = $stateParams.query;
+    $scope.format = $stateParams.format;
+    $scope.sort = $stateParams.sort;
+    $scope.availability = $stateParams.availability;
+    $scope.loc = $stateParams.loc;
+    $scope.qtype = $stateParams.qtype;
+
+    if (($scope.format != 'all') || ($scope.sort != 'relevance') || ($scope.loc != '22') || ($scope.availability != 'off') || ($scope.qtype != 'keyword')) {
+        $scope.advance_search = true
+    }
+
+    if (($scope.query != null) || ($scope.current_search != $scope.query)) {
+        $scope.search();
+    }
 });
 
+// Home Controller (this does nothing, actually)
 app.controller('HomeCtrl', function($scope, $rootScope, $ionicLoading) {
 });
 
-//Account Controller
-app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $ionicLoading, login){
+// Account Controller
+app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $ionicLoading, login) {
+    $scope.login = function() {
+        login.login($scope.username, $scope.password)
+    }
 
-  $scope.login = function(){
-    login.login($scope.username, $scope.password)
-  }
+    $scope.logout = function() {
+        localStorage.clear();
+        $rootScope.logged_in = false
+        $rootScope.user_basic = {}
+        $location.path('/home');
+    }
 
-  $scope.logout = function(){
-    localStorage.clear();
-    $rootScope.logged_in = false
-    $rootScope.user_basic = {}
-    $location.path( '/home' );
-  }
-
-  if (localStorage['token'] != null){
+    if (localStorage['token'] != null){
     login.login();
-  }
+    }
 });
 
-//Hold Controller
-app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details, popup){
-  $scope.holds = function(){
-    var token = localStorage.getItem('token')
-    $rootScope.show_loading('Loading holds...');
-    $http({
-      method: 'GET',
-      url: ilsAccountHolds,
-      params: {"token": token},
-      timeout: 15000,
-    }).success(function(data) {
-      $scope.holds = data.holds
-      $rootScope.hide_loading();
-    }).error(function(){
-      popup.alert('Oops','An error has occurred, please try again.')
-      $rootScope.hide_loading();
-    });
-  };
+// Holds Controller
+app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details, popup) {
+    $scope.holds = function() {
+        var token = localStorage.getItem('token')
+        $rootScope.show_loading('Loading holds...');
+        $http({
+            method: 'GET',
+            url: ilsAccountHolds,
+            params: {"token": token},
+            timeout: 15000,
+        }).success(function(data) {
+            $scope.holds = data.holds
+            $rootScope.hide_loading();
+        }).error(function() {
+            popup.alert('Oops','An error has occurred, please try again.')
+            $rootScope.hide_loading();
+        });
+    };
 
+    $scope.change_hold = function(hold_id, task) {
+        var token = localStorage.getItem('token')
+        $rootScope.show_loading();
+        $http({
+            method: 'GET',
+            url: ilsAccountHolds,
+            params: {"token": token, "task": task, "hold_id": hold_id},
+            timeout: 15000,
+        }).success(function(data) {
+            $scope.holds = data.holds
+            $rootScope.user_basic['holds'] = data.count
+            $rootScope.hide_loading();
+        }).error(function() {
+            popup.alert('Oops','An error has occurred, please try again.')
+            $rootScope.hide_loading();
+        });
+    }
 
-  $scope.change_hold = function(hold_id, task){
-    var token = localStorage.getItem('token')
-    $rootScope.show_loading();
-    $http({
-      method: 'GET',
-      url: ilsAccountHolds,
-      params: {"token": token, "task": task, "hold_id": hold_id},
-      timeout: 15000,
-    }).success(function(data) {
-      $scope.holds = data.holds
-      $rootScope.user_basic['holds'] = data.count
-      $rootScope.hide_loading();
-    }).error(function(){
-      popup.alert('Oops','An error has occurred, please try again.')
-      $rootScope.hide_loading();
-    });
-  }
+    $scope.item_details = function(record_id) {
+        item_details.show(record_id);
+    };
 
-
-
-  $scope.item_details = function(record_id){
-    item_details.show(record_id);
-  };
-
-  $scope.holds();
+    $scope.holds();
 });
 
-//Checkout Controller
+// Checkout Controller
 app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, $ionicLoading, $q, item_details, login, popup) {
     $scope.checkouts = function() {
         var token = localStorage.getItem('token')
@@ -420,7 +414,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
     $scope.checkouts();
 });
 
-//Card Controller
+// Card Controller
 app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $timeout, $location, login) {
     $scope.show_card = function() {
         if(localStorage.getItem('card')) {
@@ -438,7 +432,7 @@ app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $timeout,
     $scope.show_card()
 });
 
-//Location Controller
+// Location Controller
 app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading, popup) {
     $scope.get_locations = function() {
         $rootScope.show_loading();
@@ -458,7 +452,7 @@ app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading
 });
 
 
-//Events Controller
+// Events Controller
 app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, popup, node_details) {
     $scope.get_events = function() {
         $rootScope.show_loading();
@@ -480,7 +474,7 @@ app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, 
     $scope.get_events();
 });
 
-//News Controller
+// News Controller
 app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, popup, node_details) {
     $scope.get_news = function() {
         $rootScope.show_loading();
@@ -502,55 +496,52 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
     $scope.get_news();
 });
 
-//Login Factory
-app.factory('login', function($http, $rootScope, popup){
-  return {
-    login: function(username, password){
-      var username = username
-      var password = password
-
-      if (localStorage['token'] != null){
-        var token = localStorage.getItem('token'),
-        login_url = ilsAccountToken,
-        login_params = {"token": token}
-    }else{
-      login_url = ilsAccountLogin,
-      login_params = {"username": username, "password": password}
-      $rootScope.show_loading();
-    }
-    $http({
-      method: 'GET',
-      url: login_url,
-      params: login_params,
-      timeout: 15000,
-    }).success(function(data) {
-       // response data
-      $rootScope.hide_loading();
-      if (data.message == 'login failed' || data.message == 'failed' ){
-        localStorage.removeItem('token');
-        $rootScope.logged_in = false
-        $rootScope.user_basic = {}
-      } else {
-        localStorage.setItem('token', data.token)
-        localStorage.setItem('card', data.card)
-        var holdpickup = sessionStorage.getItem('holds');
-        if ((data.holds_ready >= 1) && (holdpickup != 'yep')) {
-            popup.alert('Holds available','You have holds available for pickup.');
-            sessionStorage.setItem('holds','yep');
+// Login Factory
+app.factory('login', function($http, $rootScope, popup) {
+    return {
+        login: function(username, password) {
+            var username = username
+            var password = password
+            if (localStorage['token'] != null) {
+                var token = localStorage.getItem('token'),
+                login_url = ilsAccountToken,
+                login_params = {"token": token}
+            } else {
+                login_url = ilsAccountLogin,
+                login_params = {"username": username, "password": password}
+                $rootScope.show_loading();
+            }
+            $http({
+                method: 'GET',
+                url: login_url,
+                params: login_params,
+                timeout: 15000,
+            }).success(function(data) {
+                $rootScope.hide_loading();
+                if (data.message == 'login failed' || data.message == 'failed' ){
+                    localStorage.removeItem('token');
+                    $rootScope.logged_in = false
+                    $rootScope.user_basic = {}
+                } else {
+                    localStorage.setItem('token', data.token)
+                    localStorage.setItem('card', data.card)
+                    var holdpickup = sessionStorage.getItem('holds');
+                    if ((data.holds_ready >= 1) && (holdpickup != 'yep')) {
+                        popup.alert('Holds available','You have holds available for pickup.');
+                        sessionStorage.setItem('holds','yep');
+                    }
+                    $rootScope.user_basic = data
+                    $rootScope.logged_in = true
+                }
+            }).error(function() {
+                popup.alert('Oops','An error has occurred, please try again.')
+                $rootScope.hide_loading();
+            });
         }
-        $rootScope.user_basic = data
-        $rootScope.logged_in = true
-      }
-    }).error(function(){
-      popup.alert('Oops','An error has occurred, please try again.')
-      $rootScope.hide_loading();
-    });
-
     }
-  }
 });
 
-/* node modal factory */
+// Node Modal factory
 app.factory('node_details', function($http, $ionicModal, $rootScope) {
     return {
         show: function(nid, $scope) {
@@ -582,14 +573,14 @@ app.factory('node_details', function($http, $ionicModal, $rootScope) {
                 $scope.openModal();
                 $rootScope.hide_loading();
             }).error(function(){
-              popup.alert('Oops','An error has occurred, please try again.')
-              $rootScope.hide_loading();
+                popup.alert('Oops','An error has occurred, please try again.')
+                $rootScope.hide_loading();
             });
         }
     }
 });
 
-/* item modal factory */
+// Item Modal factory
 app.factory('item_details', function($http, $ionicModal, $rootScope) {
     return {
         show: function(record_id, $scope) {
@@ -619,20 +610,20 @@ app.factory('item_details', function($http, $ionicModal, $rootScope) {
                 $scope.copies = data.copies
                 $scope.copies_on_shelf = data.copies_on_shelf
                 var locations = new Array();
-                for (var i = 0; i< data.copies_on_shelf.length; i++){
-                  locations.push(data.copies_on_shelf[i]['location'])
+                for (var i = 0; i< data.copies_on_shelf.length; i++) {
+                    locations.push(data.copies_on_shelf[i]['location'])
                 }
                 $scope.locations = jQuery.unique(locations)
                 $rootScope.hide_loading();
-            }).error(function(){
-              popup.alert('Oops','An error has occurred, please try again.')
-              $rootScope.hide_loading();
+            }).error(function() {
+                popup.alert('Oops','An error has occurred, please try again.')
+                $rootScope.hide_loading();
             });
         }
     }
 });
 
-/* popup alert factory */
+// Popup Alert factory
 app.factory('popup', function($rootScope, $ionicPopup, $timeout) {
     return {
         alert: function(title, message, $scope) {
@@ -650,7 +641,7 @@ app.factory('popup', function($rootScope, $ionicPopup, $timeout) {
     }
 });
 
-/* hold factory */
+// Hold factory
 app.factory('hold', function($http, $rootScope, login, popup) {
     return {
         place: function(record_ids) {
@@ -680,7 +671,7 @@ app.factory('hold', function($http, $rootScope, login, popup) {
                         login.login();
                         $rootScope.show_account();
                     }
-                }).error(function(){
+                }).error(function() {
                     $rootScope.hide_loading();
                     popup.alert('Oops','An error has occurred, please try again.')
                 });
@@ -689,7 +680,7 @@ app.factory('hold', function($http, $rootScope, login, popup) {
     }
 });
 
-//NgEnter Directive
+// ng-enter Directive
 app.directive('ngEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
@@ -703,6 +694,7 @@ app.directive('ngEnter', function () {
     };
 });
 
+// err-src directive
 app.directive('errSrc', function() {
     return {
         link: function(scope, element, attrs) {
