@@ -166,6 +166,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
             timeout: 15000,
             params: search_params
         }).success(function(data) {
+            $rootScope.hide_loading();
             jQuery.each(data.results, function() {
                 if (this.availability.length) {
                     var tmpavail = this.availability.pop();
@@ -182,7 +183,6 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
                 $scope.results = data.results;
                 $scope.page = +$scope.page + 1
             }
-            $rootScope.hide_loading();
             $scope.$broadcast('scroll.infiniteScrollComplete');
         }).error(function() {
             $rootScope.hide_loading();
@@ -274,11 +274,11 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
             params: {"token": token},
             timeout: 15000,
         }).success(function(data) {
+            $rootScope.hide_loading();
             $scope.holds = data.holds
-            $rootScope.hide_loading();
         }).error(function() {
-            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
+            popup.alert('Oops','An error has occurred, please try again.')
         });
     };
 
@@ -291,12 +291,12 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
             params: {"token": token, "task": task, "hold_id": hold_id},
             timeout: 15000,
         }).success(function(data) {
+            $rootScope.hide_loading();
             $scope.holds = data.holds
             $rootScope.user_basic['holds'] = data.count
-            $rootScope.hide_loading();
         }).error(function() {
-            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
+            popup.alert('Oops','An error has occurred, please try again.')
         });
     }
 
@@ -318,6 +318,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
             params: {"token": token},
             timeout: 15000,
         }).success(function(data) {
+            $rootScope.hide_loading();
             var rightnow = new Date();
             var renewids = [];
             var dueids = [];
@@ -355,10 +356,9 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                 });
             }
             $scope.checkouts = data.checkouts
-            $rootScope.hide_loading();
         }).error(function() {
-            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
+            popup.alert('Oops','An error has occurred, please try again.')
         });
     };
 
@@ -406,8 +406,8 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                 $rootScope.show_account();
             }
         }).error(function() {
-            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
+            popup.alert('Oops','An error has occurred, please try again.')
         });
     };
     $scope.checkouts();
@@ -443,8 +443,8 @@ app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading
             $scope.locations = data.locations
             $rootScope.hide_loading();
         }).error(function(){
-            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
+            popup.alert('Oops','An error has occurred, please try again.')
         });
     };
     $scope.get_locations();
@@ -463,8 +463,8 @@ app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, 
             $scope.events = data.events
             $rootScope.hide_loading();
         }).error(function() {
-            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
+            popup.alert('Oops','An error has occurred, please try again.')
         });
     };
     $scope.node_details = function(record_id) {
@@ -485,8 +485,8 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
             $scope.news = data.news
             $rootScope.hide_loading();
         }).error(function() {
-            popup.alert('Oops','An error has occurred, please try again.')
             $rootScope.hide_loading();
+            popup.alert('Oops','An error has occurred, please try again.')
         });
     };
     $scope.node_details = function(record_id) {
@@ -533,8 +533,8 @@ app.factory('login', function($http, $rootScope, popup) {
                     $rootScope.logged_in = true
                 }
             }).error(function() {
-                popup.alert('Oops','An error has occurred, please try again.')
                 $rootScope.hide_loading();
+                popup.alert('Oops','An error has occurred, please try again.')
             });
         }
     }
@@ -564,16 +564,16 @@ app.factory('node_details', function($http, $ionicModal, $rootScope, popup) {
                 url: webNode + nid,
                 timeout: 15000,
             }).success(function(data) {
+                $rootScope.hide_loading();
                 var nodebody = jQuery('<div>' + data.nodes[0].node.body + '</div>').text();
                 var nodetitle = jQuery('<span>' + data.nodes[0].node.nodetitle + '</span>').text();
                 $scope.node = data.nodes[0].node;
                 $scope.node.body = nodebody;
                 $scope.node.nodetitle = nodetitle;
                 $scope.openModal();
-                $rootScope.hide_loading();
             }).error(function(){
-                popup.alert('Oops','An error has occurred, please try again.')
                 $rootScope.hide_loading();
+                popup.alert('Oops','An error has occurred, please try again.')
             });
         }
     }
@@ -604,6 +604,7 @@ app.factory('item_details', function($http, $ionicModal, $rootScope, popup) {
                 params: {"record": record_id},
                 timeout: 15000,
             }).success(function(data) {
+                $rootScope.hide_loading();
                 $scope.openModal();
                 $scope.details = data.item_details
                 $scope.copies = data.copies
@@ -613,10 +614,9 @@ app.factory('item_details', function($http, $ionicModal, $rootScope, popup) {
                     locations.push(data.copies_on_shelf[i]['location'])
                 }
                 $scope.locations = jQuery.unique(locations)
-                $rootScope.hide_loading();
             }).error(function() {
-                popup.alert('Oops','An error has occurred, please try again.')
                 $rootScope.hide_loading();
+                popup.alert('Oops','An error has occurred, please try again.')
             });
         }
     }
