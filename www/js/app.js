@@ -350,7 +350,6 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                     if (res) {
                         $scope.renew(renewids.toString());
                     } else {
-                        // maybe set a var in sessionstorage to skip this until expiry/logout
                         sessionStorage.setItem('renewall','nope');
                     }
                 });
@@ -542,7 +541,7 @@ app.factory('login', function($http, $rootScope, popup) {
 });
 
 // Node Modal factory
-app.factory('node_details', function($http, $ionicModal, $rootScope) {
+app.factory('node_details', function($http, $ionicModal, $rootScope, popup) {
     return {
         show: function(nid, $scope) {
             $scope = $scope || $rootScope.$new();
@@ -581,7 +580,7 @@ app.factory('node_details', function($http, $ionicModal, $rootScope) {
 });
 
 // Item Modal factory
-app.factory('item_details', function($http, $ionicModal, $rootScope) {
+app.factory('item_details', function($http, $ionicModal, $rootScope, popup) {
     return {
         show: function(record_id, $scope) {
             $scope = $scope || $rootScope.$new();
