@@ -1,16 +1,18 @@
 // Set up all URLs as vars
-var ilsSearchBasic = 'https://ilscatcher2.herokuapp.com/search/basic';
-var ilsAccountHolds = 'https://ilscatcher2.herokuapp.com/account/holds';
-var ilsAccountCheckouts = 'https://ilscatcher2.herokuapp.com/account/checkouts';
-var ilsAccountRenew = 'https://ilscatcher2.herokuapp.com/account/renew_items';
-var webLocations = 'https://ilscatcher2.herokuapp.com/web/locations';
-var webEvents = 'https://ilscatcher2.herokuapp.com/web/events';
-var webNews = 'https://ilscatcher2.herokuapp.com/web/news';
-var ilsAccountLogin = 'https://ilscatcher2.herokuapp.com/account/login';
-var ilsAccountToken = 'https://ilscatcher2.herokuapp.com/account/check_token';
+var ilsCatcherBase = 'https://ilscatcher2.herokuapp.com/';
+var ilsSearchBasic = ilsCatcherBase + 'search/basic';
+var ilsItemDetails = ilsCatcherBase + 'items/details';
+var ilsAccountHolds = ilsCatcherBase + 'account/holds';
+var ilsAccountCheckouts = ilsCatcherBase + 'account/checkouts';
+var ilsAccountRenew = ilsCatcherBase + 'account/renew_items';
+var ilsAccountLogin = ilsCatcherBase + 'account/login';
+var ilsAccountToken = ilsCatcherBase + 'account/check_token';
+var ilsAccountHoldsPlace = ilsCatcherBase + 'account/place_holds';
+var ilsPasswordReset = ilsCatcherBase + 'account/password_reset';
+var webLocations = ilsCatcherBase + 'web/locations';
+var webEvents = ilsCatcherBase + 'web/events';
+var webNews = ilsCatcherBase + 'web/news';
 var webNode = 'https://www.tadl.org/export/node/json/';
-var ilsItemDetails = 'https://ilscatcher2.herokuapp.com/items/details';
-var ilsAccountHoldsPlace = 'https://ilscatcher2.herokuapp.com/account/place_holds';
 
 var app = angular.module('egmobile', ['ionic','ngFitText'])
 
@@ -246,7 +248,7 @@ app.controller('HomeCtrl', function($scope, $rootScope, $ionicLoading) {
 });
 
 // Account Controller
-app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $ionicLoading, login) {
+app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $ionicPopup, login, popup) {
     $scope.login = function() {
         login.login($scope.username, $scope.password)
     }
@@ -258,8 +260,47 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
         $location.path('/home');
     }
 
+    $scope.resetPassword = function() {
+        $scope.data = {}
+        var resetPrompt = $ionicPopup.show({
+            template: '<input type="text" ng-model="data.username">',
+            title: 'Reset Password',
+            subTitle: 'Enter your library card number or username',
+            scope: $scope,
+            buttons: [
+                { text: 'Cancel', type: 'button-assertive' },
+                {
+                    text: '<b>Send</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        if (!$scope.data.username) {
+                            e.preventDefault();
+                        } else {
+                            $rootScope.show_loading();
+                            $http({
+                                method: 'GET',
+                                url: ilsPasswordReset,
+                                params: {"username": $scope.data.username},
+                                timeout: 15000,
+                            }).success(function() {
+                                $rootScope.hide_loading();
+                                popup.alert('Request Submitted','Your password reset request has been queued. You should receive an email within the next 5-10 minutes with instructions on completing the password reset process. Thank you!')
+                            }).error(function() {
+                                $rootScope.hide_loading();
+                                popup.alert('Oops','An error has occurred, please try again.');
+                            });
+                        }
+                    }
+                },
+            ]
+        });
+        resetPrompt.then(function(res) {
+            console.log('Tapped!', res);
+        });
+    }
+
     if (localStorage['token'] != null){
-    login.login();
+        login.login();
     }
 });
 
