@@ -648,6 +648,12 @@ app.factory('item_details', function($http, $ionicModal, $rootScope, popup) {
                 $rootScope.hide_loading();
                 $scope.openModal();
                 $scope.details = data.item_details
+                if (data.item_details['title'].indexOf("/")) {
+                    var pretitle = data.item_details['title'].split("/");
+                    $scope.title = pretitle[0];
+                } else {
+                    $scope.title = data.item_details['title'];
+                }
                 $scope.copies = data.copies
                 $scope.copies_on_shelf = data.copies_on_shelf
                 var locations = new Array();
