@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget 
-    id="com.ionicframework.ionictest925975" 
-    version="0.0.1" 
-    xmlns="http://www.w3.org/ns/widgets" 
+    id="org.tadl.tadl"
+    version="1.9.9"
+    xmlns="http://www.w3.org/ns/widgets"
     xmlns:gap="http://phonegap.com/ns/1.0" >
     <name>TADL</name>
     <description>
