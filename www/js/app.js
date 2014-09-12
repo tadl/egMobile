@@ -244,7 +244,25 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
 });
 
 // Home Controller (this does nothing, actually)
-app.controller('HomeCtrl', function($scope, $rootScope, $ionicLoading) {
+app.controller('HomeCtrl', function($scope, $ionicSlideBoxDelegate, $http, popup, item_details, hold) {
+    $scope.get_items = function() {
+        $http({
+            method: 'GET',
+            url: 'https://kcl-listcacher.herokuapp.com/list/view.json?list=teen_books',
+            timeout: 15000,
+        }).success(function(data) {
+            $scope.items = data.items
+            $ionicSlideBoxDelegate.update();
+        }).error(function(){
+            popup.alert('Oops','An error has occurred, please try again.')
+        });
+    };
+
+    $scope.item_details = function(record_id) {
+        item_details.show(record_id);
+    };
+
+    $scope.get_items();
 });
 
 // Account Controller
@@ -295,7 +313,7 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
             ]
         });
         resetPrompt.then(function(res) {
-            console.log('Tapped!', res);
+            // console.log('Tapped!', res);
         });
     }
 
