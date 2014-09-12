@@ -21,7 +21,7 @@
         <!-- Center content -->
         <ion-side-menu-content>
           <ion-header-bar class="bar-solid">
-            <button class="button button-icon" menu-toggle="left">
+            <button class="button button-icon" menu-toggle="left" ng-hide="$exposeAside.active">
               <i class="icon ion-navicon-round"></i>
             </button>
             <h1 class="title" data-fittext="1.745" data-fittext-max="24">Traverse Area District Library</h1>
@@ -39,9 +39,9 @@
 
         <!-- Left menu -->
       </ion-side-menu-content>
-        <ion-side-menu side="left" class="make_fast" expose-aside-when="large">
+        <ion-side-menu side="left" class="make_fast" expose-aside-when="(min-width:800px)" width="230">
           <ion-header-bar class="bar-stable">
-            <h1 class="title">Menu</h1>
+            <h1 class="title">Main Menu</h1>
           </ion-header-bar>
             <ion-content>
               <div ui-view name="menu" class="make_fast">
@@ -50,9 +50,9 @@
         </ion-side-menu>
 
               <!-- right menu -->
-        <ion-side-menu side="right" class="make_fast">
+        <ion-side-menu side="right" class="make_fast" width="250">
           <ion-header-bar class="bar-stable">
-            <h1 class="title">Account</h1>
+            <h1 class="title">My Account</h1>
           </ion-header-bar>
           <ion-content>
               <div ui-view name="account" class="make_fast">
