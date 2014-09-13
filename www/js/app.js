@@ -68,7 +68,7 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
         function(openLeft) {
             $rootScope.openLeft = openLeft;
         });
-    });
+    }, 0);
 
     $rootScope.$on('$viewContentLoaded', function(){
         $ionicScrollDelegate.scrollTop();
