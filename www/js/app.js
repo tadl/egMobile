@@ -141,18 +141,15 @@ app.controller('MenuCtrl', function($scope, $rootScope, $timeout, $ionicSideMenu
     $timeout(function() {
         $scope.$watch(function() {
             return $ionicSideMenuDelegate.isOpenRight();
-        },
-        function(openRight) {
+        }, function(openRight) {
             $scope.openRight = openRight;
         });
         $scope.$watch(function() {
             return $ionicSideMenuDelegate.isOpenLeft();
-        },
-        function(openLeft) {
+        }, function(openLeft) {
             $scope.openLeft = openLeft;
         });
     }, 0);
-
 });
 
 // Search Controller
