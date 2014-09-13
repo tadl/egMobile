@@ -18,11 +18,11 @@
             <ion-side-menu-content>
                 <ion-header-bar class="bar-solid">
                     <button class="button button-icon" menu-toggle="left" ng-hide="$exposeAside.active">
-                        <i class="icon ion-navicon-round"></i>
+                        <i class="icon" ng-class="{false: 'ion-navicon-round', true: 'ion-chevron-left'}[$root.openLeft && !$exposeAside.active]"></i>
                     </button>
                     <h1 class="title" data-fittext="1.745" data-fittext-max="24">Traverse Area District Library</h1>
                     <button class="button button-icon" menu-toggle="right">
-                        <i class="icon ion-person"></i>
+                        <i class="icon" ng-class="{false: 'ion-person', true: 'ion-chevron-right'}[$root.openRight]"></i>
                     </button>
                 </ion-header-bar>
                 <ion-content>

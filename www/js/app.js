@@ -36,8 +36,8 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
     }, 101)
 })
 
-// Set gloabl variables and functions
-.run(function($rootScope, $ionicSideMenuDelegate, $ionicLoading, $ionicScrollDelegate) {
+// Set global variables and functions
+.run(function($rootScope, $timeout, $ionicSideMenuDelegate, $ionicLoading, $ionicScrollDelegate) {
     $rootScope.logged_in = ""
     $rootScope.user_basic = ""
     $rootScope.show_loading = function(custom){
@@ -54,6 +54,21 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
     $rootScope.show_account = function(){
         $ionicSideMenuDelegate.toggleRight(true);
     }
+
+    $timeout(function() {
+        $rootScope.$watch(function() {
+            return $ionicSideMenuDelegate.isOpenRight();
+        },
+        function(openRight) {
+            $rootScope.openRight = openRight;
+        });
+        $rootScope.$watch(function() {
+            return $ionicSideMenuDelegate.isOpenLeft();
+        },
+        function(openLeft) {
+            $rootScope.openLeft = openLeft;
+        });
+    });
 
     $rootScope.$on('$viewContentLoaded', function(){
         $ionicScrollDelegate.scrollTop();
