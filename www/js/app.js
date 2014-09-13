@@ -55,21 +55,6 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
         $ionicSideMenuDelegate.toggleRight(true);
     }
 
-    $timeout(function() {
-        $rootScope.$watch(function() {
-            return $ionicSideMenuDelegate.isOpenRight();
-        },
-        function(openRight) {
-            $rootScope.openRight = openRight;
-        });
-        $rootScope.$watch(function() {
-            return $ionicSideMenuDelegate.isOpenLeft();
-        },
-        function(openLeft) {
-            $rootScope.openLeft = openLeft;
-        });
-    }, 0);
-
     $rootScope.$on('$viewContentLoaded', function(){
         $ionicScrollDelegate.scrollTop();
     });
@@ -152,8 +137,26 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
 
 })
 
+app.controller('MenuCtrl', function($scope, $rootScope, $timeout, $ionicSideMenuDelegate) {
+    $timeout(function() {
+        $scope.$watch(function() {
+            return $ionicSideMenuDelegate.isOpenRight();
+        },
+        function(openRight) {
+            $scope.openRight = openRight;
+        });
+        $scope.$watch(function() {
+            return $ionicSideMenuDelegate.isOpenLeft();
+        },
+        function(openLeft) {
+            $scope.openLeft = openLeft;
+        });
+    }, 0);
+
+});
+
 // Search Controller
-app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, $timeout, popup, hold, item_details){
+app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, $timeout, popup, hold, item_details) {
     $scope.advance_search = false;
     $scope.search = function(more){
         if(more != 'true') {
