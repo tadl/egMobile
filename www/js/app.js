@@ -284,6 +284,8 @@ app.controller('HomeCtrl', function($scope, $ionicSlideBoxDelegate, $http, popup
 app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $ionicPopup, login, popup) {
     $scope.login = function() {
         login.login($scope.username, $scope.password)
+        $scope.username = null;
+        $scope.password = null;
     }
 
     $scope.logout = function() {
