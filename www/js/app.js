@@ -6,6 +6,7 @@ var ilsAccountHolds = ilsCatcherBase + 'account/holds';
 var ilsAccountCheckouts = ilsCatcherBase + 'account/checkouts';
 var ilsAccountRenew = ilsCatcherBase + 'account/renew_items';
 var ilsAccountLogin = ilsCatcherBase + 'account/login';
+var ilsAccountRefresh = ilsCatcherBase + 'account/login_refresh';
 var ilsAccountToken = ilsCatcherBase + 'account/check_token';
 var ilsAccountHoldsPlace = ilsCatcherBase + 'account/place_holds';
 var ilsPasswordReset = ilsCatcherBase + 'account/password_reset';
