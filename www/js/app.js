@@ -341,7 +341,7 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
 });
 
 // Holds Controller
-app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details, popup) {
+app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details, popup, login) {
     $scope.holds = function() {
         var token = localStorage.getItem('token')
         $rootScope.show_loading('Loading holds...');
@@ -352,7 +352,11 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
             timeout: 15000,
         }).success(function(data) {
             $rootScope.hide_loading();
-            $scope.holds = data.holds
+            if (data.message != "Invalid token") {
+                $scope.holds = data.holds
+            } else {
+                login.login();
+            }
         }).error(function() {
             $rootScope.hide_loading();
             popup.alert('Oops','An error has occurred, please try again.')
@@ -369,8 +373,12 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
             timeout: 15000,
         }).success(function(data) {
             $rootScope.hide_loading();
-            $scope.holds = data.holds
-            $rootScope.user_basic['holds'] = data.count
+            if (data.message != "Invalid token") {
+                $scope.holds = data.holds
+                $rootScope.user_basic['holds'] = data.count
+            } else {
+                login.login();
+            }
         }).error(function() {
             $rootScope.hide_loading();
             popup.alert('Oops','An error has occurred, please try again.')
@@ -396,43 +404,47 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
             timeout: 15000,
         }).success(function(data) {
             $rootScope.hide_loading();
-            var rightnow = new Date();
-            var renewids = [];
-            var dueids = [];
-            jQuery.each(data.checkouts, function() {
-                var due = new Date(this.iso_due_date);
-                if (due < rightnow) {
-                    this.overdue = true;
-                    dueids.push(Number(this.checkout_id));
-                } else { this.overdue = false; }
-                if ((this.overdue == true) && (this.renew_attempts > 0)) {
-                    this.renew_urgent = true;
-                    renewids.push(Number(this.checkout_id));
-                } else { this.renew_urgent = false; }
-            });
-            var renewall = sessionStorage.getItem('renewall');
-            if ((renewids.length) && (renewall != 'nope')) {
-                var message = '';
-                if (renewids.length == dueids.length) {
-                    message = 'You have ' + dueids.length + ' overdue item' + ((dueids.length>1)?'s':'') + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
-                } else {
-                    message = 'You have ' + dueids.length + ' overdue item' + ((dueids.length>1)?'s,':',') + renewids.length + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
-                }
-                var confirmPopup = $ionicPopup.confirm({
-                    title: 'Overdue Items',
-                    template: message,
-                    okText: 'Yes',
-                    cancelText: 'Not now'
+            if (data.message != "Invalid token") {
+                var rightnow = new Date();
+                var renewids = [];
+                var dueids = [];
+                jQuery.each(data.checkouts, function() {
+                    var due = new Date(this.iso_due_date);
+                    if (due < rightnow) {
+                        this.overdue = true;
+                        dueids.push(Number(this.checkout_id));
+                    } else { this.overdue = false; }
+                    if ((this.overdue == true) && (this.renew_attempts > 0)) {
+                        this.renew_urgent = true;
+                        renewids.push(Number(this.checkout_id));
+                    } else { this.renew_urgent = false; }
                 });
-                confirmPopup.then(function(res) {
-                    if (res) {
-                        $scope.renew(renewids.toString());
+                var renewall = sessionStorage.getItem('renewall');
+                if ((renewids.length) && (renewall != 'nope')) {
+                    var message = '';
+                    if (renewids.length == dueids.length) {
+                        message = 'You have ' + dueids.length + ' overdue item' + ((dueids.length>1)?'s':'') + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
                     } else {
-                        sessionStorage.setItem('renewall','nope');
+                        message = 'You have ' + dueids.length + ' overdue item' + ((dueids.length>1)?'s,':',') + renewids.length + ' with available renewals, would you like to attempt to renew ' + ((renewids.length>1)?'them':'it') + '?';
                     }
-                });
+                    var confirmPopup = $ionicPopup.confirm({
+                        title: 'Overdue Items',
+                        template: message,
+                        okText: 'Yes',
+                        cancelText: 'Not now'
+                    });
+                    confirmPopup.then(function(res) {
+                        if (res) {
+                            $scope.renew(renewids.toString());
+                        } else {
+                            sessionStorage.setItem('renewall','nope');
+                        }
+                    });
+                }
+                $scope.checkouts = data.checkouts
+            } else {
+                login.login();
             }
-            $scope.checkouts = data.checkouts
         }).error(function() {
             $rootScope.hide_loading();
             popup.alert('Oops','An error has occurred, please try again.')
@@ -453,7 +465,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
             timeout: 15000,
         }).success(function(data) {
             $rootScope.hide_loading();
-            if (data.message != 'Invalid token') {
+            if (data.message != "Invalid token") {
                 var rightnow = new Date();
                 var renewids = [];
                 jQuery.each(data.checkouts, function() {
@@ -478,9 +490,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                 popup.alert('Renewal Response',renewresponse);
                 $scope.checkouts = data.checkouts
             } else {
-                popup.alert('Oops','Your login session has expired. Please log in again.')
                 login.login();
-                $rootScope.show_account();
             }
         }).error(function() {
             $rootScope.hide_loading();
@@ -493,11 +503,11 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
 // Card Controller
 app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $timeout, $location, login) {
     $scope.show_card = function() {
-        if(localStorage.getItem('card')) {
+        if (localStorage.getItem('card')) {
             var card = localStorage.getItem('card')
             $("#barcode").JsBarcode(card, { format:'CODE128', displayValue:true, fontSize:16, width: 2 });
         } else {
-            if($rootScope.logged_in == true) {
+            if ($rootScope.logged_in == true) {
                 $timeout(function() { $scope.show_card() }, 1500);
             } else {
                 $location.path('/home');
@@ -740,7 +750,7 @@ app.factory('hold', function($http, $rootScope, login, popup) {
                     timeout: 15000,
                 }).success(function(data) {
                     $rootScope.hide_loading();
-                    if (data.message != 'Invalid token') {
+                    if (data.message != "Invalid token") {
                         popup.alert('Hold Response',data.confirmation_messages[0].message);
                         if(data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ) {
                             var hold_button = document.getElementById('hold_' + record_ids)
@@ -749,9 +759,7 @@ app.factory('hold', function($http, $rootScope, login, popup) {
                             login.login();
                         }
                     } else {
-                        popup.alert('Oops','Your login session has expired, please log in again.')
                         login.login();
-                        $rootScope.show_account();
                     }
                 }).error(function() {
                     $rootScope.hide_loading();
