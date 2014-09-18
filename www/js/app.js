@@ -15,7 +15,7 @@ var webEvents = ilsCatcherBase + 'web/events';
 var webNews = ilsCatcherBase + 'web/news';
 var webNode = 'https://www.tadl.org/export/node/json/';
 
-var app = angular.module('egmobile', ['ionic','ngFitText'])
+var app = angular.module('egmobile', ['ionic','ngFitText','angularUtils.directives.dirPagination'])
 
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -46,14 +46,20 @@ var app = angular.module('egmobile', ['ionic','ngFitText'])
         $ionicLoading.show({
             template: '<i class="icon ion-loading-d big_loading"></i> <span class="loading_text">' + loadingtext + '</span>'
         });
+        $rootScope.loading = true
     }
 
     $rootScope.hide_loading = function(){
         $ionicLoading.hide();
+        $rootScope.loading = false
     }
 
     $rootScope.show_account = function(){
         $ionicSideMenuDelegate.toggleRight(true);
+    }
+
+    $rootScope.scroll_top = function(){
+        $ionicScrollDelegate.scrollTop();  
     }
 
     $rootScope.$on('$viewContentLoaded', function(){

@@ -126,3 +126,18 @@ div.menu_div:hover {
 img.logo {
     height: 100px;
 }
+
+.disabled_pagination{
+    display: none;
+}
+
+#pagination li{
+    margin: 10px;
+}
+
+#pagination a{
+    text-decoration: none;
+    color: #fff;
+    padding: 10px;
+    background-color: #4a87ee; 
+}
