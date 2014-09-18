@@ -285,7 +285,7 @@ app.controller('HomeCtrl', function($scope, $ionicSlideBoxDelegate, $http, popup
 app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $ionicPopup, login, popup) {
     $scope.login = function() {
         login.login($scope.username, $scope.password)
-        $scope.username = null;
+        /*$scope.username = null;*/
         $scope.password = null;
     }
 
@@ -335,7 +335,7 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
         });
     }
 
-    if (localStorage['token'] != null){
+    if (localStorage['token'] != null || localStorage['hash'] != null){
         login.login();
     }
 });
@@ -356,6 +356,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
                 $scope.holds = data.holds
             } else {
                 login.login();
+                $scope.holds();
             }
         }).error(function() {
             $rootScope.hide_loading();
@@ -378,6 +379,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
                 $rootScope.user_basic['holds'] = data.count
             } else {
                 login.login();
+                popup.alert('Temporary error', 'The system encountered a temporary error, but it should be resolved now. Please try that again.');
             }
         }).error(function() {
             $rootScope.hide_loading();
@@ -444,6 +446,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                 $scope.checkouts = data.checkouts
             } else {
                 login.login();
+                $scope.checkouts();
             }
         }).error(function() {
             $rootScope.hide_loading();
@@ -491,6 +494,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                 $scope.checkouts = data.checkouts
             } else {
                 login.login();
+                popup.alert('Temporary error', 'The system encountered a temporary error, but it should be resolved now. Please try that again.');
             }
         }).error(function() {
             $rootScope.hide_loading();
@@ -588,7 +592,17 @@ app.factory('login', function($http, $rootScope, popup) {
         login: function(username, password) {
             var username = username
             var password = password
-            if (localStorage['token'] != null) {
+            if (username != null) { localStorage.setItem('username', username); }
+            if (password != null) {
+                var hash = CryptoJS.MD5(password).toString(CryptoJS.enc.MD5);
+                localStorage.setItem('hash', hash);
+            }
+            var localuser = localStorage.getItem('username');
+            var localhash = localStorage.getItem('hash');
+            if (localhash != null) {
+                login_url = ilsAccountRefresh,
+                login_params = {"username": localuser, "pass_md5": localhash}
+            } else if (localStorage['token'] != null) {
                 var token = localStorage.getItem('token'),
                 login_url = ilsAccountToken,
                 login_params = {"token": token}
@@ -760,6 +774,7 @@ app.factory('hold', function($http, $rootScope, login, popup) {
                         }
                     } else {
                         login.login();
+                        popup.alert('Temporary error', 'The system encountered a temporary error, but it should be resolved now. Please try that again.');
                     }
                 }).error(function() {
                     $rootScope.hide_loading();
