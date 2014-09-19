@@ -34,35 +34,35 @@ var app = angular.module('egmobile', ['ionic','ngFitText','angularUtils.directiv
         }
         e.preventDefault();
         return false;
-    }, 101)
+    }, 101);
 })
 
 // Set global variables and functions
 .run(function($rootScope, $timeout, $ionicSideMenuDelegate, $ionicLoading, $ionicScrollDelegate) {
-    $rootScope.logged_in = ""
-    $rootScope.user_basic = ""
-    $rootScope.show_loading = function(custom){
+    $rootScope.logged_in = "";
+    $rootScope.user_basic = "";
+    $rootScope.show_loading = function(custom) {
         var loadingtext = custom || 'Loading...';
         $ionicLoading.show({
             template: '<i class="icon ion-loading-d big_loading"></i> <span class="loading_text">' + loadingtext + '</span>'
         });
-        $rootScope.loading = true
+        $rootScope.loading = true;
     }
 
-    $rootScope.hide_loading = function(){
+    $rootScope.hide_loading = function() {
         $ionicLoading.hide();
-        $rootScope.loading = false
+        $rootScope.loading = false;
     }
 
-    $rootScope.show_account = function(){
+    $rootScope.show_account = function() {
         $ionicSideMenuDelegate.toggleRight(true);
     }
 
-    $rootScope.scroll_top = function(){
+    $rootScope.scroll_top = function() {
         $ionicScrollDelegate.scrollTop();  
     }
 
-    $rootScope.$on('$viewContentLoaded', function(){
+    $rootScope.$on('$viewContentLoaded', function() {
         $ionicScrollDelegate.scrollTop();
     });
 })
@@ -141,7 +141,6 @@ var app = angular.module('egmobile', ['ionic','ngFitText','angularUtils.directiv
         debounce: false,
         delay: 1000
     };
-
 })
 
 app.controller('MenuCtrl', function($scope, $rootScope, $timeout, $ionicSideMenuDelegate) {
@@ -162,27 +161,27 @@ app.controller('MenuCtrl', function($scope, $rootScope, $timeout, $ionicSideMenu
 // Search Controller
 app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, $timeout, popup, hold, item_details) {
     $scope.advance_search = false;
-    $scope.search = function(more){
-        if(more != 'true') {
+    $scope.search = function(more) {
+        if (more != 'true') {
             $scope.page = 0;
             $rootScope.show_loading('Searching...');
         }
 
-        var search_params = {}
-        search_params['query'] = $scope.query
-        search_params['format'] = $scope.format
-        search_params['sort'] = $scope.sort
-        search_params['availability'] = $scope.availability
-        search_params['loc'] = $scope.loc
-        search_params['qtype'] = $scope.qtype
+        var search_params = {};
+        search_params['query'] = $scope.query;
+        search_params['format'] = $scope.format;
+        search_params['sort'] = $scope.sort;
+        search_params['availability'] = $scope.availability;
+        search_params['loc'] = $scope.loc;
+        search_params['qtype'] = $scope.qtype;
 
         if ($stateParams.query != $scope.query || $stateParams.format != $scope.format || $stateParams.sort != $scope.sort || $stateParams.availability != $scope.availability || $stateParams.loc != $scope.loc || $stateParams.qtype != $scope.qtype) {
-            $scope.current_search = $scope.query
+            $scope.current_search = $scope.query;
             $location.path('/search').search(search_params);
-            return
+            return;
         }
 
-        search_params['page'] = $scope.page
+        search_params['page'] = $scope.page;
 
         $http({
             method: 'GET',
@@ -201,11 +200,11 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
             $scope.more_results = data.more_results;
             $scope.new_results = data.results
             if (more == 'true') {
-                $scope.results = $scope.results.concat($scope.new_results)
-                $scope.page = +$scope.page + 1
+                $scope.results = $scope.results.concat($scope.new_results);
+                $scope.page++;
             } else {
                 $scope.results = data.results;
-                $scope.page = +$scope.page + 1
+                $scope.page++;
             }
             $scope.$broadcast('scroll.infiniteScrollComplete');
         }).error(function() {
@@ -238,7 +237,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
     }
 
     $scope.toggle_advanced = function() {
-        if($scope.advance_search == false) {
+        if ($scope.advance_search == false) {
             $scope.advance_search = true;
         } else {
             $scope.advance_search = false;
@@ -257,7 +256,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
     $scope.qtype = $stateParams.qtype;
 
     if (($scope.format != 'all') || ($scope.sort != 'relevance') || ($scope.loc != '22') || ($scope.availability != 'off') || ($scope.qtype != 'keyword')) {
-        $scope.advance_search = true
+        $scope.advance_search = true;
     }
 
     if (($scope.query != null) || ($scope.current_search != $scope.query)) {
@@ -267,38 +266,19 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
 
 // Home Controller (this does nothing, actually)
 app.controller('HomeCtrl', function($scope, $ionicSlideBoxDelegate, $http, popup, item_details, hold) {
-    $scope.get_items = function() {
-        $http({
-            method: 'GET',
-            url: 'https://kcl-listcacher.herokuapp.com/list/view.json?list=teen_books',
-            timeout: 15000,
-        }).success(function(data) {
-            $scope.items = data.items
-            $ionicSlideBoxDelegate.update();
-        }).error(function(){
-            popup.alert('Oops','An error has occurred, please try again.')
-        });
-    };
-
-    $scope.item_details = function(record_id) {
-        item_details.show(record_id);
-    };
-
-    $scope.get_items();
 });
 
 // Account Controller
 app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $ionicPopup, login, popup) {
     $scope.login = function() {
-        login.login($scope.username, $scope.password)
-        /*$scope.username = null;*/
+        login.login($scope.username, $scope.password);
         $scope.password = null;
     }
 
     $scope.logout = function() {
         localStorage.clear();
-        $rootScope.logged_in = false
-        $rootScope.user_basic = {}
+        $rootScope.logged_in = false;
+        $rootScope.user_basic = {};
         $location.path('/home');
     }
 
@@ -341,7 +321,7 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
         });
     }
 
-    if (localStorage['token'] != null || localStorage['hash'] != null){
+    if (localStorage['token'] != null || localStorage['hash'] != null) {
         login.login();
     }
 });
@@ -381,15 +361,15 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
         }).success(function(data) {
             $rootScope.hide_loading();
             if (data.message != "Invalid token") {
-                $scope.holds = data.holds
-                $rootScope.user_basic['holds'] = data.count
+                $scope.holds = data.holds;
+                $rootScope.user_basic['holds'] = data.count;
             } else {
                 login.login();
                 popup.alert('Temporary error', 'The system encountered a temporary error, but it should be resolved now. Please try that again.');
             }
         }).error(function() {
             $rootScope.hide_loading();
-            popup.alert('Oops','An error has occurred, please try again.')
+            popup.alert('Oops', 'An error has occurred, please try again.');
         });
     }
 
@@ -445,18 +425,18 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                         if (res) {
                             $scope.renew(renewids.toString());
                         } else {
-                            sessionStorage.setItem('renewall','nope');
+                            sessionStorage.setItem('renewall', 'nope');
                         }
                     });
                 }
-                $scope.checkouts = data.checkouts
+                $scope.checkouts = data.checkouts;
             } else {
                 login.login();
                 $scope.checkouts();
             }
         }).error(function() {
             $rootScope.hide_loading();
-            popup.alert('Oops','An error has occurred, please try again.')
+            popup.alert('Oops', 'An error has occurred, please try again.');
         });
     };
 
@@ -466,7 +446,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
 
     $scope.renew = function(checkout_id) {
         $rootScope.show_loading('Renewing...');
-        var token = localStorage.getItem('token')
+        var token = localStorage.getItem('token');
         $http({
             method: 'GET',
             url: ilsAccountRenew,
@@ -497,14 +477,14 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
                     });
                 }
                 popup.alert('Renewal Response',renewresponse);
-                $scope.checkouts = data.checkouts
+                $scope.checkouts = data.checkouts;
             } else {
                 login.login();
                 popup.alert('Temporary error', 'The system encountered a temporary error, but it should be resolved now. Please try that again.');
             }
         }).error(function() {
             $rootScope.hide_loading();
-            popup.alert('Oops','An error has occurred, please try again.')
+            popup.alert('Oops','An error has occurred, please try again.');
         });
     };
     $scope.checkouts();
@@ -514,7 +494,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
 app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $timeout, $location, login) {
     $scope.show_card = function() {
         if (localStorage.getItem('card')) {
-            var card = localStorage.getItem('card')
+            var card = localStorage.getItem('card');
             $("#barcode").JsBarcode(card, { format:'CODE128', displayValue:true, fontSize:16, width: 2 });
         } else {
             if ($rootScope.logged_in == true) {
@@ -525,7 +505,7 @@ app.controller('CardCtrl', function($scope, $rootScope, $ionicLoading, $timeout,
             }
         }
     }
-    $scope.show_card()
+    $scope.show_card();
 });
 
 // Location Controller
@@ -537,11 +517,11 @@ app.controller('LocationCtrl', function($scope, $rootScope, $http, $ionicLoading
             url: webLocations,
             timeout: 15000,
         }).success(function(data) {
-            $scope.locations = data.locations
+            $scope.locations = data.locations;
             $rootScope.hide_loading();
-        }).error(function(){
+        }).error(function() {
             $rootScope.hide_loading();
-            popup.alert('Oops','An error has occurred, please try again.')
+            popup.alert('Oops', 'An error has occurred, please try again.');
         });
     };
     $scope.get_locations();
@@ -557,11 +537,11 @@ app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, 
             url: webEvents,
             timeout: 15000,
         }).success(function(data) {
-            $scope.events = data.events
+            $scope.events = data.events;
             $rootScope.hide_loading();
         }).error(function() {
             $rootScope.hide_loading();
-            popup.alert('Oops','An error has occurred, please try again.')
+            popup.alert('Oops', 'An error has occurred, please try again.');
         });
     };
     $scope.node_details = function(record_id) {
@@ -579,11 +559,11 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
             url: webNews,
             timeout: 15000,
         }).success(function(data) {
-            $scope.news = data.news
+            $scope.news = data.news;
             $rootScope.hide_loading();
         }).error(function() {
             $rootScope.hide_loading();
-            popup.alert('Oops','An error has occurred, please try again.')
+            popup.alert('Oops', 'An error has occurred, please try again.');
         });
     };
     $scope.node_details = function(record_id) {
@@ -596,8 +576,8 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
 app.factory('login', function($http, $rootScope, popup) {
     return {
         login: function(username, password) {
-            var username = username
-            var password = password
+            var username = username;
+            var password = password;
             if (username != null) { localStorage.setItem('username', username); }
             if (password != null) {
                 var hash = CryptoJS.MD5(password).toString(CryptoJS.enc.MD5);
@@ -606,15 +586,15 @@ app.factory('login', function($http, $rootScope, popup) {
             var localuser = localStorage.getItem('username');
             var localhash = localStorage.getItem('hash');
             if (localhash != null) {
-                login_url = ilsAccountRefresh,
-                login_params = {"username": localuser, "pass_md5": localhash}
+                login_url = ilsAccountRefresh;
+                login_params = {"username": localuser, "pass_md5": localhash};
             } else if (localStorage['token'] != null) {
-                var token = localStorage.getItem('token'),
-                login_url = ilsAccountToken,
-                login_params = {"token": token}
+                var token = localStorage.getItem('token');
+                login_url = ilsAccountToken;
+                login_params = {"token": token};
             } else {
-                login_url = ilsAccountLogin,
-                login_params = {"username": username, "password": password}
+                login_url = ilsAccountLogin;
+                login_params = {"username": username, "password": password};
                 $rootScope.show_loading();
             }
             $http({
@@ -624,24 +604,24 @@ app.factory('login', function($http, $rootScope, popup) {
                 timeout: 15000,
             }).success(function(data) {
                 $rootScope.hide_loading();
-                if (data.message == 'login failed' || data.message == 'failed' ){
+                if (data.message == 'login failed' || data.message == 'failed' ) {
                     localStorage.removeItem('token');
-                    $rootScope.logged_in = false
-                    $rootScope.user_basic = {}
+                    $rootScope.logged_in = false;
+                    $rootScope.user_basic = {};
                 } else {
-                    localStorage.setItem('token', data.token)
-                    localStorage.setItem('card', data.card)
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('card', data.card);
                     var holdpickup = sessionStorage.getItem('holds');
                     if ((data.holds_ready >= 1) && (holdpickup != 'yep')) {
-                        popup.alert('Holds available','You have holds available for pickup.');
-                        sessionStorage.setItem('holds','yep');
+                        popup.alert('Holds available', 'You have holds available for pickup.');
+                        sessionStorage.setItem('holds', 'yep');
                     }
-                    $rootScope.user_basic = data
-                    $rootScope.logged_in = true
+                    $rootScope.user_basic = data;
+                    $rootScope.logged_in = true;
                 }
             }).error(function() {
                 $rootScope.hide_loading();
-                popup.alert('Oops','An error has occurred, please try again.')
+                popup.alert('Oops', 'An error has occurred, please try again.');
             });
         }
     }
@@ -678,9 +658,9 @@ app.factory('node_details', function($http, $ionicModal, $rootScope, popup) {
                 $scope.node.body = nodebody;
                 $scope.node.nodetitle = nodetitle;
                 $scope.openModal();
-            }).error(function(){
+            }).error(function() {
                 $rootScope.hide_loading();
-                popup.alert('Oops','An error has occurred, please try again.')
+                popup.alert('Oops', 'An error has occurred, please try again.');
             });
         }
     }
@@ -720,16 +700,16 @@ app.factory('item_details', function($http, $ionicModal, $rootScope, popup) {
                 } else {
                     $scope.title = data.item_details['title'];
                 }
-                $scope.copies = data.copies
-                $scope.copies_on_shelf = data.copies_on_shelf
+                $scope.copies = data.copies;
+                $scope.copies_on_shelf = data.copies_on_shelf;
                 var locations = new Array();
                 for (var i = 0; i< data.copies_on_shelf.length; i++) {
-                    locations.push(data.copies_on_shelf[i]['location'])
+                    locations.push(data.copies_on_shelf[i]['location']);
                 }
-                $scope.locations = jQuery.unique(locations)
+                $scope.locations = jQuery.unique(locations);
             }).error(function() {
                 $rootScope.hide_loading();
-                popup.alert('Oops','An error has occurred, please try again.')
+                popup.alert('Oops', 'An error has occurred, please try again.');
             });
         }
     }
@@ -759,10 +739,10 @@ app.factory('hold', function($http, $rootScope, login, popup) {
         place: function(record_ids) {
             var record_ids = record_ids
             if ($rootScope.logged_in == false) {
-                popup.alert('Authorization required','Please log in to place holds.')
+                popup.alert('Authorization required', 'Please log in to place holds.')
             } else {
                 $rootScope.show_loading('Placing hold...');
-                var token = localStorage.getItem('token')
+                var token = localStorage.getItem('token');
                 $http({
                     method: 'GET',
                     url: ilsAccountHoldsPlace,
@@ -773,7 +753,7 @@ app.factory('hold', function($http, $rootScope, login, popup) {
                     if (data.message != "Invalid token") {
                         popup.alert('Hold Response',data.confirmation_messages[0].message);
                         if(data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ) {
-                            var hold_button = document.getElementById('hold_' + record_ids)
+                            var hold_button = document.getElementById('hold_' + record_ids);
                             hold_button.innerHTML = "On Hold";
                             hold_button.disabled = true;
                             login.login();
@@ -784,7 +764,7 @@ app.factory('hold', function($http, $rootScope, login, popup) {
                     }
                 }).error(function() {
                     $rootScope.hide_loading();
-                    popup.alert('Oops','An error has occurred, please try again.')
+                    popup.alert('Oops', 'An error has occurred, please try again.');
                 });
             }
         }
@@ -792,11 +772,11 @@ app.factory('hold', function($http, $rootScope, login, popup) {
 });
 
 // ng-enter Directive
-app.directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
+app.directive('ngEnter', function() {
+    return function(scope, element, attrs) {
+        element.bind("keydown keypress", function(event) {
             if(event.which === 13) {
-                scope.$apply(function (){
+                scope.$apply(function() {
                     scope.$eval(attrs.ngEnter);
                 });
                 event.preventDefault();
@@ -816,7 +796,7 @@ app.directive('errSrc', function() {
             });
             element.bind('load', function() {
                 var image = new Image();
-                image.src = attrs.src
+                image.src = attrs.src;
                 var w = image.width;
                 if (w == 1) {
                     attrs.$set('src', attrs.errSrc);
