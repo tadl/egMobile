@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget 
     id="org.TADL.TADLMobile"
-    version="1.9.96"
-    versionCode = "25"
+    version="1.9.97"
+    versionCode = "26"
     xmlns="http://www.w3.org/ns/widgets"
     xmlns:gap="http://phonegap.com/ns/1.0" >
     <!-- bah -->
