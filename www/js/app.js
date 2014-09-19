@@ -15,7 +15,7 @@ var webEvents = ilsCatcherBase + 'web/events';
 var webNews = ilsCatcherBase + 'web/news';
 var webNode = 'https://www.tadl.org/export/node/json/';
 
-var app = angular.module('egmobile', ['ionic','ngFitText','angularUtils.directives.dirPagination'])
+var app = angular.module('egmobile', ['ionic', 'ngFitText', 'angularUtils.directives.dirPagination'])
 
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {
@@ -209,7 +209,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
             $scope.$broadcast('scroll.infiniteScrollComplete');
         }).error(function() {
             $rootScope.hide_loading();
-            popup.alert('Oops','An error has occurred, please try again.');
+            popup.alert('Oops', 'An error has occurred, please try again.');
         });
     };
 
@@ -232,7 +232,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
         try {
             window.open(link, '_system', 'location=no,toolbar=yes');
         } catch (err) {
-            popup.alert('Oops','Unable to open that link. Please try again.');
+            popup.alert('Oops', 'Unable to open that link. Please try again.');
         }
     }
 
@@ -306,10 +306,10 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
                                 timeout: 15000,
                             }).success(function() {
                                 $rootScope.hide_loading();
-                                popup.alert('Request Submitted','Your password reset request has been queued. You should receive an email within the next 5-10 minutes with instructions on completing the password reset process. Thank you!')
+                                popup.alert('Request Submitted', 'Your password reset request has been queued. You should receive an email within the next 5-10 minutes with instructions on completing the password reset process. Thank you!')
                             }).error(function() {
                                 $rootScope.hide_loading();
-                                popup.alert('Oops','An error has occurred, please try again.');
+                                popup.alert('Oops', 'An error has occurred, please try again.');
                             });
                         }
                     }
@@ -346,7 +346,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
             }
         }).error(function() {
             $rootScope.hide_loading();
-            popup.alert('Oops','An error has occurred, please try again.')
+            popup.alert('Oops', 'An error has occurred, please try again.')
         });
     };
 
@@ -484,7 +484,7 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
             }
         }).error(function() {
             $rootScope.hide_loading();
-            popup.alert('Oops','An error has occurred, please try again.');
+            popup.alert('Oops', 'An error has occurred, please try again.');
         });
     };
     $scope.checkouts();
