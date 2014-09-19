@@ -30,6 +30,7 @@
     <preference name="disable-cursor" value="false" />
 
     <gap:plugin name="org.apache.cordova.inappbrowser" version="0.3.3" />
+    <gap:plugin name="com.ionic.keyboard" version="1.0.2" />
 
     <gap:platform name="ios" />
     <gap:platform name="android" />
