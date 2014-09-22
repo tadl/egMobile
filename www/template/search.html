@@ -56,7 +56,7 @@
             </select>
         </label>
     </div>
-    <div class="card make_fast" dir-paginate="result in results | itemsPerPage: 10">
+    <div class="card make_fast" dir-paginate="result in results | itemsPerPage: 10: 'search'" pagination-id="search">
         <div class="item item-avatar">
             <img ng-src="{{result.format_icon}}" err-src="img/clocktower100.png" />
             <h2>{{result.title}}</h2>
@@ -86,6 +86,6 @@
             <button ng-show="result.eresource" class="button button-positive" ng-click="openLink('{{result.eresource}}')">Connect</button>
         </div>
     </div>
-    <dir-pagination-controls on-page-change="scroll_top()"></dir-pagination-controls>
+    <dir-pagination-controls on-page-change="scroll_top()" pagination-id="search"></dir-pagination-controls>
     <ion-infinite-scroll style="display: none" ng-if="more_results == 'true'" on-infinite="search('true')" distance="50%"></ion-infinite-scroll>
 </div>

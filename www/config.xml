@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget 
     id="org.TADL.TADLMobile"
-    version="1.9.97"
-    versionCode = "26"
+    version="1.9.98"
+    versionCode = "27"
     xmlns="http://www.w3.org/ns/widgets"
     xmlns:gap="http://phonegap.com/ns/1.0" >
     <!-- bah -->
@@ -16,7 +16,7 @@
 
     <preference name="permissions" value="none"/>
     <preference name="phonegap-version" value="3.5.0"/>
-    <preference name="orientation" value="default"/>
+    <preference name="orientation" value="portrait"/>
     <preference name="target-device" value="universal"/>
     <preference name="fullscreen" value="true"/>
     <preference name="webviewbounce" value="false"/>
@@ -28,6 +28,7 @@
     <preference name="show-splash-screen-spinner" value="false" />
     <preference name="auto-hide-splash-screen" value="true" />
     <preference name="disable-cursor" value="false" />
+    <preference name="android-minSdkVersion" value="16" />
 
     <gap:plugin name="org.apache.cordova.inappbrowser" version="0.3.3" />
     <gap:plugin name="com.ionic.keyboard" version="1.0.2" />
