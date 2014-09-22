@@ -330,7 +330,7 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
 app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $q, item_details, popup, login) {
     $scope.holds = function() {
         var token = localStorage.getItem('token')
-        $rootScope.show_loading('Loading holds...');
+        $rootScope.show_loading('Loading&nbsp;holds...');
         $http({
             method: 'GET',
             url: ilsAccountHolds,
@@ -384,7 +384,7 @@ app.controller('HoldsCtrl', function($scope, $rootScope, $http, $ionicLoading, $
 app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, $ionicLoading, $q, item_details, login, popup) {
     $scope.checkouts = function() {
         var token = localStorage.getItem('token')
-        $rootScope.show_loading('Loading checkouts...');
+        $rootScope.show_loading('Loading&nbsp;checkouts...');
         $http({
             method: 'GET',
             url: ilsAccountCheckouts,
@@ -576,7 +576,7 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
 app.factory('login', function($http, $rootScope, popup) {
     return {
         login: function(username, password) {
-            $rootScope.show_loading('Logging in...');
+            $rootScope.show_loading('Logging&nbsp;in...');
             var username = username;
             var password = password;
             if (username != null) { localStorage.setItem('username', username); }
@@ -645,7 +645,7 @@ app.factory('node_details', function($http, $ionicModal, $rootScope, popup) {
             $scope.closeModal = function() {
                 $scope.modal.hide();
             };
-            $rootScope.show_loading('Loading details...');
+            $rootScope.show_loading('Loading&nbsp;details...');
             $http({
                 method: 'GET',
                 url: webNode + nid,
@@ -684,7 +684,7 @@ app.factory('item_details', function($http, $ionicModal, $rootScope, popup) {
             $scope.closeModal = function() {
                 $scope.modal.hide();
             };
-            $rootScope.show_loading('Loading details...');
+            $rootScope.show_loading('Loading&nbsp;details...');
             $http({
                 method: 'GET',
                 url: ilsItemDetails,
@@ -741,7 +741,7 @@ app.factory('hold', function($http, $rootScope, login, popup) {
             if ($rootScope.logged_in == false) {
                 popup.alert('Authorization required', 'Please log in to place holds.')
             } else {
-                $rootScope.show_loading('Placing hold...');
+                $rootScope.show_loading('Placing&nbsp;hold...');
                 var token = localStorage.getItem('token');
                 $http({
                     method: 'GET',
