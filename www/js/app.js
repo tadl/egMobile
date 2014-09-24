@@ -6,6 +6,7 @@ var ilsAccountHolds = ilsCatcherBase + 'account/holds';
 var ilsAccountCheckouts = ilsCatcherBase + 'account/checkouts';
 var ilsAccountRenew = ilsCatcherBase + 'account/renew_items';
 var ilsAccountLogin = ilsCatcherBase + 'account/login';
+var ilsAccountLogout = ilsCatcherBase + 'account/logout';
 var ilsAccountRefresh = ilsCatcherBase + 'account/login_refresh';
 var ilsAccountToken = ilsCatcherBase + 'account/check_token';
 var ilsAccountHoldsPlace = ilsCatcherBase + 'account/place_holds';
@@ -283,7 +284,17 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
         localStorage.clear();
         $rootScope.logged_in = false;
         $rootScope.user_basic = {};
-        $location.path('/home');
+        var token = localStorage.getItem('token');
+        $http({
+            method: 'GET',
+            url: ilsAccountLogout,
+            params: {"token": token},
+            timeout: 15000
+        }).success(function() {
+            $location.path('/home');
+        }).error(function() {
+        });
+        $rootScope.hide_loading();
     }
 
     $scope.resetPassword = function() {
