@@ -268,6 +268,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
 app.controller('HomeCtrl', function($rootScope, $scope, $ionicSlideBoxDelegate, $http, popup, item_details, hold, login) {
     var username = localStorage.getItem('username');
     var password = localStorage.getItem('password');
+    if (password != null) { localStorage.removeItem('password'); }
     if (username != null && password != null && $rootScope.logged_in == false) { login.login(username, password); }
 });
 
