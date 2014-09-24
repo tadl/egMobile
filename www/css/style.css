@@ -97,6 +97,7 @@ div.menu_div:hover {
 }
 .hours-row span.detail_value {
     float: right;
+    width: 100%;
 }
 
 .overdue {
