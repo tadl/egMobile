@@ -162,6 +162,7 @@ app.controller('MenuCtrl', function($scope, $rootScope, $timeout, $ionicSideMenu
 // Search Controller
 app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, $timeout, popup, hold, item_details) {
     $scope.advance_search = false;
+    $scope.results = [];
     $scope.search = function(more) {
         if (more != 'true') {
             $scope.page = 0;
@@ -265,7 +266,7 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
     }
 });
 
-// Home Controller (this does nothing, actually)
+// Home Controller
 app.controller('HomeCtrl', function($rootScope, $scope, $ionicSlideBoxDelegate, $http, popup, item_details, hold, login) {
     var username = localStorage.getItem('username');
     var password = localStorage.getItem('password');
