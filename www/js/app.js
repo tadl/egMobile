@@ -271,7 +271,6 @@ app.controller('HomeCtrl', function($rootScope, $scope, $ionicSlideBoxDelegate, 
     var username = localStorage.getItem('username');
     var password = localStorage.getItem('password');
     if (password != null) { localStorage.removeItem('password'); }
-    if (username != null && password != null && $rootScope.logged_in == false) { login.login(username, password); }
 });
 
 // Account Controller
@@ -282,10 +281,10 @@ app.controller('AccountCtrl', function($scope, $rootScope, $http, $location, $io
     }
 
     $scope.logout = function() {
+        var token = localStorage.getItem('token');
         localStorage.clear();
         $rootScope.logged_in = false;
         $rootScope.user_basic = {};
-        var token = localStorage.getItem('token');
         $http({
             method: 'GET',
             url: ilsAccountLogout,
@@ -575,6 +574,9 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
             url: webNews,
             timeout: 15000,
         }).success(function(data) {
+            jQuery.each(data.news, function() {
+                this.teasertitle = jQuery('<div>' + this.teasertitle + '</div>').text();
+            });
             $scope.news = data.news;
             $rootScope.hide_loading();
         }).error(function() {
@@ -592,7 +594,9 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
 app.factory('login', function($http, $rootScope, popup) {
     return {
         login: function(username, password) {
-            $rootScope.show_loading('Logging&nbsp;in...');
+            if (username != null) {
+                $rootScope.show_loading('Logging&nbsp;in...');
+            }
             var username = username;
             var password = password;
             if (username != null) { localStorage.setItem('username', username); }
