@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget 
-    id="org.TADL.TADLMobile"
-    version="2.0.4"
-    versionCode="37"
+    id="org.tadl.tadl"
+    version="2.0.5"
+    versionCode="38"
     xmlns="http://www.w3.org/ns/widgets"
     xmlns:gap="http://phonegap.com/ns/1.0" >
 
@@ -33,7 +33,7 @@
     <preference name="android-minSdkVersion" value="16" />
 
     <gap:config-file platform="ios" parent="CFBundleVersion">
-        <string>671</string>
+        <string>672</string>
     </gap:config-file>
 
     <gap:plugin name="org.apache.cordova.inappbrowser" version="0.5.2" />
