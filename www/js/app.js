@@ -408,11 +408,11 @@ app.controller('CheckoutCtrl', function($scope, $rootScope, $http, $ionicPopup, 
         }).success(function(data) {
             $rootScope.hide_loading();
             if (data.message != "Invalid token") {
-                var rightnow = new Date();
+                var rightnow = moment().format("YYYY-MM-DD");
                 var renewids = [];
                 var dueids = [];
                 jQuery.each(data.checkouts, function() {
-                    var due = new Date(this.iso_due_date);
+                    var due = moment(this.iso_due_date).format("YYYY-MM-DD");
                     if (due < rightnow) {
                         this.overdue = true;
                         dueids.push(Number(this.checkout_id));
