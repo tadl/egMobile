@@ -9,9 +9,14 @@
             <p>{{hold.author}}</p>
         </div>
         <div class="item">
-            <span class="detail_key">Status: </span>
-            <span class="detail_value" ng-show="hold.hold_status != ''">{{hold.queue_status}}</span>
-            <span class="detail_value" ng-show="hold.hold_status == 'Suspended'">{{hold.hold_status}}</span>
+            <div>
+                <span class="detail_key">Status: </span>
+                <span class="detail_value" ng-show="hold.hold_status != ''">{{hold.queue_status}}</span>
+                <span class="detail_value" ng-show="hold.hold_status == 'Suspended'">{{hold.hold_status}}</span>
+            </div>
+            <div>
+                <span class="detail_value">You are number {{hold.queue_state[0]}} in line.</span>
+            </div>
         </div>
         <div class="item">
             <button class="button button-positive" ng-click="item_details('{{hold.record_id}}')">Details</button>

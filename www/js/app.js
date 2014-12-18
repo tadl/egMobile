@@ -69,7 +69,7 @@ var app = angular.module('egmobile', ['ionic', 'ngFitText', 'angularUtils.direct
 })
 
 // Create routes
-.config(function($stateProvider, $urlRouterProvider, fitTextConfigProvider) {
+.config(function($stateProvider, $urlRouterProvider, $httpProvider, fitTextConfigProvider) {
     $stateProvider
     .state('main', {
         url: '/',
@@ -142,6 +142,14 @@ var app = angular.module('egmobile', ['ionic', 'ngFitText', 'angularUtils.direct
         debounce: false,
         delay: 1000
     };
+
+    // This too.
+    $httpProvider.defaults.transformRequest = function(data) {
+        if (data === undefined) {
+            return data;
+        }
+        return $.param(data);
+    }
 })
 
 app.controller('MenuCtrl', function($scope, $rootScope, $timeout, $ionicSideMenuDelegate) {
@@ -618,9 +626,10 @@ app.factory('login', function($http, $rootScope, popup) {
                 login_params = {"username": username, "password": password};
             }
             $http({
-                method: 'GET',
+                method: 'POST',
                 url: login_url,
-                params: login_params,
+                data: login_params,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
                 timeout: 15000,
             }).success(function(data) {
                 $rootScope.hide_loading();
@@ -754,41 +763,55 @@ app.factory('popup', function($rootScope, $ionicPopup, $timeout) {
 });
 
 // Hold factory
-app.factory('hold', function($http, $rootScope, login, popup) {
-    return {
-        place: function(record_ids) {
-            var record_ids = record_ids
-            if ($rootScope.logged_in == false) {
-                popup.alert('Authorization required', 'Please log in to place holds.')
-            } else {
-                $rootScope.show_loading('Placing&nbsp;hold...');
-                var token = localStorage.getItem('token');
-                $http({
-                    method: 'GET',
-                    url: ilsAccountHoldsPlace,
-                    params: {"record_ids": record_ids, "token": token},
-                    timeout: 15000,
-                }).success(function(data) {
-                    $rootScope.hide_loading();
-                    if (data.message != "Invalid token") {
-                        popup.alert('Hold Response',data.confirmation_messages[0].message);
-                        if(data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ) {
-                            var hold_button = document.getElementById('hold_' + record_ids);
-                            hold_button.innerHTML = "On Hold";
-                            hold_button.disabled = true;
-                            login.login();
-                        }
-                    } else {
-                        login.login();
-                        popup.alert('Temporary error', 'The system encountered a temporary error, but it should be resolved now. Please try that again.');
+app.factory('hold', function($http, $rootScope, $ionicPopup, login, popup) {
+    var self = {}
+    self.place = function(record_ids, force) {
+        var record_ids = record_ids
+        if ($rootScope.logged_in == false) {
+            popup.alert('Authorization required', 'Please log in to place holds.')
+        } else {
+            $rootScope.show_loading('Placing&nbsp;hold...');
+            var token = localStorage.getItem('token');
+            $http({
+                method: 'GET',
+                url: ilsAccountHoldsPlace,
+                params: {"record_ids": record_ids, "token": token, "force": force},
+                timeout: 15000,
+            }).success(function(data) {
+                $rootScope.hide_loading();
+                if (data.message != "Invalid token") {
+                    if (data.confirmation_messages[0].message == 'Placing this hold could result in longer wait times.') {
+                        var warnPopup = $ionicPopup.confirm({
+                            title: 'Hold Response',
+                            template: data.confirmation_messages[0].message,
+                            okText: 'OK',
+                            cancelText: 'Cancel'
+                        });
+                        warnPopup.then(function(res) {
+                            if (res) { self.place(record_ids, 'true'); }
+                        });
                     }
-                }).error(function() {
-                    $rootScope.hide_loading();
-                    popup.alert('Oops', 'An error has occurred, please try again.');
-                });
-            }
+                    if (data.confirmation_messages[0].message != 'Placing this hold could result in longer wait times.') {
+                        popup.alert('Hold Response', data.confirmation_messages[0].message);
+                    }
+                    if (data.confirmation_messages[0].message == 'Hold was successfully placed' || data.confirmation_messages[0].message == 'Hold was not successfully placed Problem: User already has an open hold on the selected item' ) {
+                        var hold_button = document.getElementById('hold_' + record_ids);
+                        hold_button.innerHTML = "On Hold";
+                        hold_button.disabled = true;
+                        login.login();
+                    }
+                } else {
+                    login.login();
+                    popup.alert('Temporary error', 'The system encountered a temporary error, but it should be resolved now. Please try that again.');
+                }
+            }).error(function() {
+                $rootScope.hide_loading();
+                popup.alert('Oops', 'An error has occurred, please try again.');
+            });
         }
     }
+
+    return self;
 });
 
 // ng-enter Directive
