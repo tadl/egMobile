@@ -171,12 +171,26 @@ app.controller('MenuCtrl', function($scope, $rootScope, $timeout, $ionicSideMenu
 app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $stateParams, $timeout, popup, hold, item_details) {
     $scope.advance_search = false;
     $scope.results = [];
+    $scope.pageChanged = function(newPage) {
+        $scope.current_page = newPage;
+    };
     $scope.search = function(more) {
         if (more != 'true') {
+            $scope.current_page = 1
             $scope.page = 0;
             $rootScope.show_loading('Searching...');
+            var paused = false
+        }else{
+            $scope.loaded_results = $scope.results.length
+            $scope.results_limitation = ($scope.current_page * 10)
+            if(($scope.loaded_results - $scope.results_limitation) >= 20){
+                var paused = true
+                $scope.$broadcast('scroll.infiniteScrollComplete')
+            }else{
+                var paused = false
+            }            
         }
-
+        
         var search_params = {};
         search_params['query'] = $scope.query;
         search_params['format'] = $scope.format;
@@ -193,34 +207,36 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
 
         search_params['page'] = $scope.page;
 
-        $http({
-            method: 'GET',
-            url: ilsSearchBasic,
-            timeout: 15000,
-            params: search_params
-        }).success(function(data) {
-            $rootScope.hide_loading();
-            jQuery.each(data.results, function() {
-                if (this.availability.length) {
-                    var tmpavail = this.availability.pop();
-                    this.availability = tmpavail;
+        if( paused != true){
+            $http({
+                method: 'GET',
+                url: ilsSearchBasic,
+                timeout: 15000,
+                params: search_params
+            }).success(function(data) {
+                $rootScope.hide_loading();
+                jQuery.each(data.results, function() {
+                    if (this.availability.length) {
+                        var tmpavail = this.availability.pop();
+                        this.availability = tmpavail;
+                    }
+                });
+                $scope.page = data.page
+                $scope.more_results = data.more_results;
+                $scope.new_results = data.results
+                if (more == 'true') {
+                    $scope.results = $scope.results.concat($scope.new_results);
+                    $scope.page++;
+                } else {
+                    $scope.results = data.results;
+                    $scope.page++;
                 }
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+            }).error(function() {
+                $rootScope.hide_loading();
+                popup.alert('Oops', 'An error has occurred, please try again.');
             });
-            $scope.page = data.page
-            $scope.more_results = data.more_results;
-            $scope.new_results = data.results
-            if (more == 'true') {
-                $scope.results = $scope.results.concat($scope.new_results);
-                $scope.page++;
-            } else {
-                $scope.results = data.results;
-                $scope.page++;
-            }
-            $scope.$broadcast('scroll.infiniteScrollComplete');
-        }).error(function() {
-            $rootScope.hide_loading();
-            popup.alert('Oops', 'An error has occurred, please try again.');
-        });
+        }
     };
 
     $scope.item_details = function(record_id) {
