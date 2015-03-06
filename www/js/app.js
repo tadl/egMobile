@@ -60,12 +60,21 @@ var app = angular.module('egmobile', ['ionic', 'ngFitText', 'angularUtils.direct
     }
 
     $rootScope.scroll_top = function() {
-        $ionicScrollDelegate.scrollTop();  
+        $ionicScrollDelegate.scrollTop();
     }
 
     $rootScope.$on('$viewContentLoaded', function() {
         $ionicScrollDelegate.scrollTop();
     });
+
+    $rootScope.openLink = function(link) {
+        try {
+            window.open(link, '_system', 'location=no,toolbar=yes');
+        } catch (err) {
+            popup.alert('Oops', 'Unable to open that link. Please try again.');
+        }
+    }
+
 })
 
 // Create routes
@@ -188,9 +197,9 @@ app.controller('SearchCtrl', function($scope, $rootScope, $http, $location, $sta
                 $scope.$broadcast('scroll.infiniteScrollComplete')
             }else{
                 var paused = false
-            }            
+            }
         }
-        
+
         var search_params = {};
         search_params['query'] = $scope.query;
         search_params['format'] = $scope.format;
@@ -607,9 +616,6 @@ app.controller("NewsCtrl",function($scope, $rootScope, $http, $ionicLoading, pop
             $rootScope.hide_loading();
             popup.alert('Oops', 'An error has occurred, please try again.');
         });
-    };
-    $scope.node_details = function(record_id) {
-        node_details.show(record_id);
     };
     $scope.get_news();
 });
