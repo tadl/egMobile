@@ -142,3 +142,7 @@ img.logo {
     padding: 10px;
     background-color: #4a87ee; 
 }
+.item-input-wrapper {
+    border-top-right-radius:0;
+    border-bottom-right-radius:0;
+}
