@@ -1,11 +1,13 @@
 <div class="list make_fast">
     <div class="item item-input-inset">
-        <i class="button-clear icon ion-search" ng-click="search()"></i>
+        <i class="button-clear icon ion-settings" title="Search Settings" name="Search Settings" ng-click="toggle_advanced()"></i>
         <label class="item-input-wrapper">
             <input type="text" ng-model="query" placeholder="Search the Catalog" ng-enter="search()" id="searchBox" />
         </label>
+        <div style="background-color:#434343;padding:4px;margin-right:5px;" ng-click="search()">
+            <i class="button-clear icon ion-search" style="color:#fff;"></i>
+        </div>
         <i class="button-clear icon ion-close-circled" title="Reset Search" name="Reset Search" ng-click="resetSearch()"></i>
-        <i class="button-clear icon ion-settings" title="Search Settings" name="Search Settings" ng-click="toggle_advanced()"></i>
     </div>
     <div id="search_options" ng-show="advance_search == true">
         <label class="item item-input item-select">
