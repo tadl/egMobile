@@ -15,6 +15,7 @@ var webLocations = ilsCatcherBase + 'web/locations';
 var webEvents = ilsCatcherBase + 'web/events';
 var webNews = ilsCatcherBase + 'web/news';
 var webNode = 'https://www.tadl.org/export/node/json/';
+var featuredItems = 'https://www.tadl.org/mobile/export/items/json/featured?mobi_bypass=1';
 
 var app = angular.module('egmobile', ['ionic', 'ngFitText', 'angularUtils.directives.dirPagination'])
 
@@ -142,6 +143,12 @@ var app = angular.module('egmobile', ['ionic', 'ngFitText', 'angularUtils.direct
         url: 'news',
         templateUrl: 'template/news.html',
         controller: 'NewsCtrl',
+    })
+
+    .state('main.featured',{
+        url: 'featured',
+        templateUrl: 'template/featured.html',
+        controller: 'FeaturedCtrl',
     })
 
     $urlRouterProvider.otherwise('/home');
@@ -596,6 +603,32 @@ app.controller('EventsCtrl', function($scope, $rootScope, $http, $ionicLoading, 
         node_details.show(record_id);
     };
     $scope.get_events();
+});
+
+// Featured Items Controller
+app.controller('FeaturedCtrl',function($scope, $rootScope, $http, $ionicLoading, popup, hold, item_details) {
+    $scope.get_featured = function() {
+        $rootScope.show_loading();
+        $http({
+            method: 'GET',
+            url: featuredItems,
+            timeout: 15000,
+        }).success(function(data) {
+            console.log(data.nodes);
+            $scope.featured = data.nodes;
+            $rootScope.hide_loading();
+        }).error(function() {
+            $rootScope.hide_loading();
+            popup.alert('Oops', 'An error has occurred, please try again.');
+        });
+    };
+    $scope.item_details = function(record_id) {
+        item_details.show(record_id);
+    };
+    $scope.place_hold = function(record_id) {
+        hold.place(record_id);
+    };
+    $scope.get_featured();
 });
 
 // News Controller

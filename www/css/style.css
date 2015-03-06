@@ -30,6 +30,12 @@ body {
     width: 100%;
 }
 
+.item_image {
+    float: left;
+    padding-right: 10px;
+    max-width:90%;
+}
+
 .node_image {
     float: left;
     padding-right: 10px;
